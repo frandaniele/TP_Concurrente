@@ -51,6 +51,7 @@ public class Monitor {
                 }
                 //System.out.printf("%s va a intentar disparar la transicion %d\n", Thread.currentThread().getName(), transicion);
                 if(rdp.disparar(t)){
+                    log.escribirLog("T" + transicion + "-");
                     //System.out.printf("%s pudo disparar\n", Thread.currentThread().getName());
                     if (transicion == 6 || transicion == 10 || transicion == 11) {
                         //System.out.println("Se finalizo el invariante que termina con T" + transicion);

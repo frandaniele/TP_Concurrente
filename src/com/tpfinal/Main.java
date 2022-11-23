@@ -19,7 +19,7 @@ public class Main {
         int[] t10 = {0,1,0,0,0,0,0,0,0,0,0};
         int[] t11 = {0,0,1,0,0,0,0,0,0,0,0};
 
-        Log log = new Log();
+        Log log = Log.getInstance();
         RedDePetri rdp = new RedDePetri();
         Politica politica = new Politica(rdp);
         Monitor monitor = new Monitor(rdp, politica, log);
@@ -77,6 +77,8 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
+
+        log.writeFile();
 
         System.out.println("-----------------MAIN END-----------------------");
     }
