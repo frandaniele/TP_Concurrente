@@ -1,0 +1,7 @@
+La RdP no está libre de deadlock. 
+
+La RdP está limitada ya que está cubierta por invariantes de plaza positivos.
+
+La RdP no es segura, ya que en la marca inicial mo ya se observan lugares con más de 1 token.
+
+Al tener deadlock, la RdP no es viva.
