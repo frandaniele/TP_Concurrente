@@ -6,7 +6,7 @@ public class Pasante implements Runnable{
     private int t2[];
 
     public Pasante(Monitor monitor, int[] t1, int[] t2) {
-        this.monitor=monitor;
+        this.monitor = monitor;
         this.t1 = t1;
         this.t2 = t2;
     }

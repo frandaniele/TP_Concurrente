@@ -1,0 +1,119 @@
+@startuml diags
+
+class Capataz {
+    - Monitor monitor
+    - int t
+    + run (  )    
+}
+
+class Trabajador {
+    - Monitor monitor
+    - int t1
+    - int t2
+    - int t3
+    - int t4
+    + run (  )    
+}
+
+class Pasante {
+    - Monitor monitor
+    - int t1
+    - int t2
+    + run (  )    
+}
+
+class Politica {
+    
+}
+
+class RedDePetri {
+    - int[] marcado
+    - int[] m0
+    - int[] pInvariantes
+    - int[][] matrizIncidencia
+    - int[] tSensibilizadas
+    + boolean disparar ( int[] )
+    + int[] getTransicionesSensibilizadas (  )
+    + int getCantidadTransiciones (  )
+    + boolean checkPInvariantes (  )
+    - boolean evaluarDisparo ( int[] )
+    - calcularNuevoEstado ( int[] )
+    - calcularSensibilizadas (  )
+    - int getMarcadoPlaza ( int )
+
+}
+
+class Monitor {
+    - Semaphore mutexMonitor
+    - Semaphore[] colas
+    - RedDePetri rdp
+    - Politica politica
+    - int invariantesCompletados
+    - int nTransicionesRed
+    - int[] tInvariantes
+    + disparar ( int[] )
+    + boolean getState (  )
+    + getCuantosDeCada (  )
+    - int getInvariantesCompletados (  )
+    - verColas (  )
+    - dormir ( int[] )
+}
+
+class Main {
+    + main ( String[] )
+    - Trabajador[] grupo1
+    - Trabajador[] grupo2
+    - Thread[] threads
+    - int[] t1
+    - int[] t2
+    - int[] t3
+    - int[] t4
+    - int[] t5
+    - int[] t6
+    - int[] t7
+    - int[] t8
+    - int[] t9
+    - int[] t10
+    - int[] t11
+    - RedDePetri rdp
+    - Politica politica
+    - Monitor monitor
+    - Capataz capataz
+    - Pasante pasante
+}
+
+class Semaphore {
+    + acquire (  )
+    + release (  )
+}
+
+class Thread {
+    + start (  )
+    + join (  )
+    + sleep ( long )
+}
+
+interface Runnable
+
+Monitor --> Semaphore
+RedDePetri <- Monitor
+Monitor -> Politica
+
+Runnable <|-. Capataz
+Runnable <|-. Trabajador
+Runnable <|-. Pasante
+Runnable <|-. Thread
+
+Capataz --> Monitor
+Pasante --> Monitor
+Trabajador --> Monitor
+
+Main ----> Capataz
+Main ----> Trabajador
+Main ----> Pasante
+Main ----> Thread
+Main ----> RedDePetri
+Main ----> Politica
+Main -----> Monitor
+
+@enduml

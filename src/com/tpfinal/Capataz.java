@@ -5,7 +5,7 @@ public class Capataz implements Runnable{
     private int t[];
 
     public Capataz(Monitor monitor, int[] t) {
-        this.monitor=monitor;
+        this.monitor = monitor;
         this.t = t;
     }
 
