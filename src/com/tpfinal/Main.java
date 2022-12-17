@@ -6,23 +6,24 @@ public class Main {
         final int[] pInvariantes = {3, 1, 3, 2, 1, 1, 1, 1, 2};
 
         final int[][] matrizIncidencia = {
-                {-1,  0,  1,  0,  0,  0,  0,  1,  0,  0,  0},
-                { 0,  0,  0,  0,  0, -1,  1,  0,  0, -1,  1},
-                { 0,  0,  0,  0,  0,  0,  0,  0,  0,  1, -1},
-                { 0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0},
-                { 0,  0,  0,  0,  0,  0,  1, -1,  0,  0,  0},
-                { 0,  0,  0,  0,  0,  0, -1,  1, -1,  1,  0},
-                { 0,  0,  0,  0,  0,  0,  0,  0,  1, -1,  0},
-                { 0,  0,  0,  0,  0,  0,  0,  0, -1,  1,  0},
-                { 0,  0,  0,  0, -1,  1,  0,  0,  0,  0,  0},
-                { 1,  0,  0, -1, -1,  0,  0,  0,  0,  0,  0},
-                {-1,  0,  0,  1,  1,  0,  0,  0,  0,  0,  0},
-                { 0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0},
-                { 0,  0, -1,  1,  0,  0,  0,  0,  0,  0,  0},
-                { 0,  0,  0,  0,  1, -1,  0,  0,  0,  0,  0},
-                { 0,  1,  0,  0, -1,  1,  0,  0,  0,  0, -1},
-                { 0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  1},
-                { 0,  0,  0,  0,  0,  1, -1,  0,  0,  0,  0},
+              // T1 T10 T11  T2  T3  T4  T5  T6  T7  T8  T9
+                {-1,  0,  1,  0,  0,  0,  0,  1,  0,  0,  0}, //P1
+                { 0,  0,  0,  0,  0, -1,  1,  0,  0, -1,  1}, //P10
+                { 0,  0,  0,  0,  0,  0,  0,  0,  0,  1, -1}, //P11
+                { 0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0}, //P12
+                { 0,  0,  0,  0,  0,  0,  1, -1,  0,  0,  0}, //P13
+                { 0,  0,  0,  0,  0,  0, -1,  1, -1,  1,  0}, //P14
+                { 0,  0,  0,  0,  0,  0,  0,  0,  1, -1,  0}, //P15
+                { 0,  0,  0,  0,  0,  0,  0,  0, -1,  1,  0}, //P16
+                { 0,  0,  0,  0, -1,  1,  0,  0,  0,  0,  0}, //P17
+                { 1,  0,  0, -1, -1,  0,  0,  0,  0,  0,  0}, //P2
+                {-1,  0,  0,  1,  1,  0,  0,  0,  0,  0,  0}, //P3
+                { 0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0}, //P4
+                { 0,  0, -1,  1,  0,  0,  0,  0,  0,  0,  0}, //P5
+                { 0,  0,  0,  0,  1, -1,  0,  0,  0,  0,  0}, //P6
+                { 0,  1,  0,  0, -1,  1,  0,  0,  0,  0, -1}, //P7
+                { 0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  1}, //P8
+                { 0,  0,  0,  0,  0,  1, -1,  0,  0,  0,  0}  //P9
         };
 
         final int[] m0 = {3, 1, 0, 3, 0, 2, 0, 1, 1, 0, 1, 1, 0, 0, 2, 0, 0};
@@ -43,20 +44,26 @@ public class Main {
         final int[] t11 = {0,0,1,0,0,0,0,0,0,0,0};
 
         Log log = Log.getInstance();
-        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia);
+        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, log);
         Politica politica = new Politica();
-        Monitor monitor = new Monitor(rdp, politica, log);
+        Monitor monitor = new Monitor(rdp, politica);
 
-        Trabajador[] grupo1 = new Trabajador[3];
-        Trabajador[] grupo2 = new Trabajador[3];
+        Operario[] grupo1 = new Operario[3];
+        Operario[] grupo2 = new Operario[3];
 
-        for(int i = 0; i < grupo1.length; i++){
-            grupo1[i] = new Trabajador(monitor, t3, t4, t5, t6);
-            grupo2[i] = new Trabajador(monitor, t7, t8, t9, t10);
+        int[][] tGrupo1 = {t3, t4, t5, t6};
+        int[][] tGrupo2 = {t7, t8, t9, t10};
+
+        for(int i = 0; i < grupo1.length; i++) {
+            grupo1[i] = new Operario(monitor, tGrupo1);
+            grupo2[i] = new Operario(monitor, tGrupo2);
         }
 
-        Capataz capataz = new Capataz(monitor, t1);
-        Pasante pasante = new Pasante(monitor, t2, t11);
+        int[][] tCapataz = {t1};
+        int[][] tPasante = {t2, t11};
+
+        Capataz capataz = new Capataz(monitor, tCapataz);
+        Pasante pasante = new Pasante(monitor, tPasante);
         
         Thread[] threads = new Thread[8];
         threads[0] = new Thread(capataz, "CAPATAZ");
@@ -85,11 +92,18 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        System.out.println("\n-----------------INVARIANTES-----------------------");
+
         
         monitor.getCuantosDeCada();
 
         log.writeFile();
 
-        System.out.println("-----------------MAIN END-----------------------");
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+
+        System.out.println("-------------------MAIN END------------------------");
     }
 }

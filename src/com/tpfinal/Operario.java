@@ -1,8 +1,8 @@
 package com.tpfinal;
 
-public class Pasante extends Trabajador implements Runnable{
+public class Operario extends Trabajador implements Runnable {
 
-    public Pasante(Monitor monitor, int[][] transiciones) {
+    public Operario(Monitor monitor, int[][] transiciones) {
         super.monitor = monitor;
         super.transiciones = transiciones;
     }

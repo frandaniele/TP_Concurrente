@@ -7,15 +7,12 @@ public class Monitor {
     private Semaphore[] colas;
     private RedDePetri rdp;
     private Politica politica;
-    private Log log;
-    private int invariantesCompletados;
     private int nTransicionesRed;
-    private int[] tInvariantes;
+    private int[] tInvariantes = {0, 0, 0};
 
-    public Monitor(RedDePetri rdp, Politica politica, Log log) {
+    public Monitor(RedDePetri rdp, Politica politica) {
         this.rdp = rdp;
         this.politica = politica;
-        this.log = log;
         mutexMonitor = new Semaphore(1, true);
         
         nTransicionesRed = rdp.getCantidadTransiciones();
@@ -23,67 +20,82 @@ public class Monitor {
         for(int i = 0; i < colas.length; i++) {
             colas[i] = new Semaphore(0, true);
         }
-
-        tInvariantes = new int[3];
-        for(int i = 0; i < tInvariantes.length; i++) {
-            tInvariantes[i] = 0;
-        }
-        invariantesCompletados = 0;
     }
 
+    /**
+     * obtengo acceso al monitor o quedo en la cola de entrada. 
+     * luego intento disparar, si pude se cambio el estado de la red
+     * si hay alguien en cola de condicion despierto segun la politica y suelto el monitor
+     * sino pude disparar me voy a dormir (cola condicion) y cuando despierto vuelvo a intentar disparar
+     * @param t
+     */
     public void disparar(int[] t) {
         try {
             mutexMonitor.acquire();
 
-            int transicion = traducirTransicion(t);
-            if(transicion == -1) 
-                throw new IllegalStateException("Valor inesperado");
-            
-            if(rdp.disparar(t)){
-                log.escribirLog("T" + transicion + "-");
-                
-                invariantesCompletados += sumarInvariante(transicion);
-                
-                if (!rdp.checkPInvariantes()) 
-                    throw new IllegalStateException("Se violó algún invariante de plaza");
-                
-                int aDespertar = politica.decision(obtenerVectorM());
-                
-                if(aDespertar != -1){
-                    verColas();
-                    if(colas[aDespertar].hasQueuedThreads()){
-                        colas[aDespertar].release();
-                        System.out.println(Thread.currentThread().getName() + "despues de despertar [" + aDespertar +"]");
-                        verColas();
-                    }
-                }
-                
-                mutexMonitor.release();
-            }
-            else{
-                mutexMonitor.release();
+            System.out.println(Thread.currentThread().getName() + " va a intentar disparar");
+
+            boolean dispare = rdp.disparar(t);
+
+            signal();
+
+            mutexMonitor.release();
+
+            if(!dispare) {
                 dormir(t);
+                disparar(t);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } 
     }
 
-    private int traducirTransicion(int t[]) {
-        for (int i = 0; i < t.length; i++) {
-            if (t[i] == 1) {
-                if (i == 1 || i == 2) 
-                    return i + 9;
-                else if (i > 2 && i < 11) 
-                    return i - 1;
-                else if (i == 0) 
-                    return i + 1;
+    /**
+     * segun la politica despierto a algun hilo (o no)
+     * y suelto el mutex del monitor
+     */
+    private void signal() {
+        int aDespertar = politica.decision(obtenerVectorM());
+        System.out.println(Thread.currentThread().getName() + " vino aDespertar");
+                
+        if(aDespertar != -1){
+            if(colas[aDespertar].hasQueuedThreads()){
+                System.out.println(Thread.currentThread().getName() + " desperto condicion " + aDespertar);
+                colas[aDespertar].release();
             }
-        }
+            else 
+                System.out.println(Thread.currentThread().getName() + " no desperto a nadie xq en esa cola no habia");
+            }
+        else
+            System.out.println(Thread.currentThread().getName() + " no desperto a nadie");
 
-        return -1;
     }
 
+    /*
+     * segun la transicion que intente disparar voy a "dormir"
+     * a su cola de condicion
+     */
+    private void dormir(int[] t){
+        for (int i = 0; i < t.length; i++) {
+            if (t[i] == 1) {
+                try {
+                    System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
+                    colas[i].acquire();
+                } catch (InterruptedException e) {
+                    System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
+                    System.exit(0);
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * segun las transiciones sensibilizadas
+     * y los hilos en colas de condicion
+     * obtengo un vector
+     * @return vector and logico entre tSens y colas
+     */
     private int[] obtenerVectorM() {
         int[] sensibilizadas = rdp.getTransicionesSensibilizadas();
         int[] quienesEstan = new int[nTransicionesRed];
@@ -104,53 +116,62 @@ public class Monitor {
         return m;
     }
     
-    private int sumarInvariante(int transicion) {
-        if (transicion == 6 || transicion == 10 || transicion == 11) {
-            if(transicion == 6) 
-                tInvariantes[0]++;
-            else if(transicion == 10) 
-                tInvariantes[1]++;
-            else if(transicion == 11) 
-                tInvariantes[2]++;
-
-            return 1;//sumo 1 invariante
-        }
-
-        return 0;//no sumo invariante
-    }
-
-    private int getInvariantesCompletados(){
-        return invariantesCompletados;
-    }
-
-    private void verColas(){
-        System.out.printf("Colas: ");
-        for(int i=0; i<colas.length; i++){
-            System.out.printf("%d-",colas[i].getQueueLength());
-        }
-        System.out.println();
-    }
-
-    private void dormir(int[] t){
+    /**
+     * segun el vector que representa la transicion a disparar
+     * obtengo el num de transicion que representa en el modelo
+     * @param t
+     * @return num de transicion
+     */
+    private int traducirTransicion(int t[]) {
         for (int i = 0; i < t.length; i++) {
             if (t[i] == 1) {
-                try {
-                    colas[i].acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
+                if (i == 1 || i == 2) 
+                    return i + 9;
+                else if (i > 2 && i < 11) 
+                    return i - 1;
+                else if (i == 0) 
+                    return i + 1;
             }
         }
+
+        return -1;
     }
 
-    public boolean getState(){
-        return getInvariantesCompletados()<=995;
+    /**
+     * detecto si se disparo una transicion que
+     * completa un invariante y lo sumo al total
+     * @param t
+     */
+    public synchronized void addInvariante(int[] t) {
+        int tr = traducirTransicion(t);
+        if(tr == 6) 
+            tInvariantes[0]++;
+        else if(tr == 10) 
+            tInvariantes[1]++;
+        else if(tr == 11) 
+            tInvariantes[2]++;
     }
 
+    /**
+     * indica a los hilos si seguir disparando transiciones
+     * segun la cantidad de invariantes completados deseados
+     * @return
+     */
+    public boolean seguirDisparando(){
+        return (tInvariantes[0] + tInvariantes[1] + tInvariantes[2]) <= 993;
+    }
+
+    /**
+     * imprime la cant de c/ invariante de transicion completado
+     */
     public void getCuantosDeCada(){
-        System.out.println("Invariante que termina en T6: " + tInvariantes[0]);
-        System.out.println("Invariante que termina en T10: " + tInvariantes[1]);
-        System.out.println("Invariante que termina en T11: " + tInvariantes[2]);
+        double total = tInvariantes[0] + tInvariantes[1] + tInvariantes[2];
+        double porcentaje0 = tInvariantes[0] / total;
+        double porcentaje1 = tInvariantes[1] / total;
+        double porcentaje2 = tInvariantes[2] / total;
+
+        System.out.println("Invariante que termina en T6: " + tInvariantes[0] + " (" + String.format("%.2f", porcentaje0 * 100) + "%)");
+        System.out.println("Invariante que termina en T10: " + tInvariantes[1] + " (" + String.format("%.2f", porcentaje1 * 100) + "%)");
+        System.out.println("Invariante que termina en T11: " + tInvariantes[2] + " (" + String.format("%.2f", porcentaje2 * 100) + "%)");
     }
 }

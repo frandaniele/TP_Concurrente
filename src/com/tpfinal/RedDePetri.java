@@ -9,22 +9,49 @@ public class RedDePetri {
 
     private int[] tSensibilizadas;
 
-    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz) {
+    private Log log;
+
+    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, Log log) {
         this.marcado = m0;
         this.pInvariantes = invariantesPlaza;
         this.tSensibilizadas = tSensibilizadas;
         this.matrizIncidencia = matriz;
+        this.log = log;
     }
 
+    /**
+     * se fija si es posible disparar la transicion 
+     * en ese caso cambia de estado a la red y
+     * chequea los invariantes de plaza y
+     * escribe en el log la transicion que se disparo
+     * @param t
+     * @return true si disparo la transicion, false si no
+     */
     public boolean disparar(int[] t){
         if(evaluarDisparo(t)){
-            calcularNuevoEstado(t);
+            calcularNuevoEstado(t);                
+            if (!checkPInvariantes()) 
+                throw new IllegalStateException("Se violó algún invariante de plaza");
+
+            int transicion = traducirTransicion(t);
+            if(transicion == -1) 
+                throw new IllegalStateException("Valor inesperado");
+
+            System.out.println(Thread.currentThread().getName() + " disparo T" + transicion);
+            log.escribirLog("T" + transicion + "-");
+                
             return true;
         }
             
         return false;
     }
 
+    /**
+     * chequea si la transicion a disparar 
+     * se encuentra en el vector de las sensibilizadas
+     * @param t
+     * @return true si puedo disparar la transicion, false si no
+     */
     private boolean evaluarDisparo(int[] t){
         int selector = -1;
         for(int i = 0; i < t.length; i++){
@@ -40,6 +67,12 @@ public class RedDePetri {
             return false;
     }
 
+    /**
+     * segun la ecuacion de estado de la red
+     * calcula el nuevo estado (marcado) de la misma
+     * despues de disparar la transicion t
+     * @param t
+     */
     private void calcularNuevoEstado(int[] t){
         int[] multiplicacion = new int[marcado.length];
         int[] suma = new int[marcado.length];
@@ -54,12 +87,21 @@ public class RedDePetri {
         marcado = suma;
     }
 
+    /**
+     * @return vector de transiciones sensibilizadas
+     */
     public int[] getTransicionesSensibilizadas() {
         calcularSensibilizadas();
 
         return tSensibilizadas;
     }
 
+    /**
+     * segun la matriz de incidencia 
+     * y el marcado actual de la red
+     * calcula y actualiza el vector de las 
+     * transiciones sensibilizadas
+     */
     private void calcularSensibilizadas(){
         for(int i = 0; i < getCantidadTransiciones(); i++){
             tSensibilizadas[i] = 1;
@@ -75,6 +117,25 @@ public class RedDePetri {
         }
     }
 
+    private int traducirTransicion(int t[]) {
+        for (int i = 0; i < t.length; i++) {
+            if (t[i] == 1) {
+                if (i == 1 || i == 2) 
+                    return i + 9;
+                else if (i > 2 && i < 11) 
+                    return i - 1;
+                else if (i == 0) 
+                    return i + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * @param P
+     * @return marcado de la plaza P
+     */
     private int getMarcadoPlaza(int P){
         int selector;
 
@@ -92,6 +153,11 @@ public class RedDePetri {
         return marcado[selector];
     }
 
+    /**
+     * calcula el valor de los invariantes de plaza
+     * de la red
+     * @return true si no se violo ningun invariante, false si si
+     */
     public boolean checkPInvariantes(){
         if(getMarcadoPlaza(1) + getMarcadoPlaza(2) + getMarcadoPlaza(5) + getMarcadoPlaza(6) + getMarcadoPlaza(9) + getMarcadoPlaza(13) != pInvariantes[0])
             System.out.println("Inv 1: " + pInvariantes[0] + " Dio: " + (getMarcadoPlaza(1) + getMarcadoPlaza(2) + getMarcadoPlaza(5) + getMarcadoPlaza(6) + getMarcadoPlaza(9)));

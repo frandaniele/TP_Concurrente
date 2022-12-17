@@ -1,18 +1,15 @@
 package com.tpfinal;
 
-public class Capataz implements Runnable{
-    private Monitor monitor;
-    private int t[];
+public class Capataz extends Trabajador implements Runnable{
 
-    public Capataz(Monitor monitor, int[] t) {
-        this.monitor = monitor;
-        this.t = t;
+    public Capataz(Monitor monitor, int[][] transiciones) {
+        super.monitor = monitor;
+        super.transiciones = transiciones;
     }
 
     @Override
     public void run() {
-        while(monitor.getState()) {
-            monitor.disparar(t);
-        }
+        while(monitor.seguirDisparando())
+            super.disparos();
     }
 }

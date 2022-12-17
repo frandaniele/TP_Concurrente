@@ -9,7 +9,7 @@ groups = '\g<2>\g<5>\g<8>\g<10>\g<12>\g<14>\g<16>\g<18>\g<20>\g<22>' #son los to
 
 log = re.subn(regex, groups, log[0])
 while(log[1] != 0): #mientras encuentre coincidencias sigue buscando
-    print(log)  
+    print(log[1])  
     log = re.subn(regex, groups, log[0])
 
 if(log[0] != "\n"): #cuando encontro todos invariantes queda un salto de linea solamente

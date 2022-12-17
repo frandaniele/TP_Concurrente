@@ -1,27 +1,38 @@
 package com.tpfinal;
 
-public class Trabajador implements Runnable {
-    private Monitor monitor;
-    private int t1[];
-    private int t2[];
-    private int t3[];
-    private int t4[];
+import java.util.concurrent.TimeUnit;
 
-    public Trabajador(Monitor monitor, int[] t1, int[] t2, int[] t3, int[] t4) {
-        this.monitor = monitor;
-        this.t1 = t1;
-        this.t2 = t2;
-        this.t3 = t3;
-        this.t4 = t4;
+public abstract class Trabajador {
+    protected int[][] transiciones;
+    protected Monitor monitor;
+    
+    public int[][] getTransiciones() {
+        return transiciones;
     }
-
-    @Override
-    public void run() {
-        while (monitor.getState()) {
-            monitor.disparar(t1);
-            monitor.disparar(t2);
-            monitor.disparar(t3);
-            monitor.disparar(t4);
+    
+    public void setTransiciones(int[][] transiciones) {
+        this.transiciones = transiciones;
+    }
+    
+    public Monitor getMonitor() {
+        return monitor;
+    }
+    
+    public void setMonitor(Monitor monitor) {
+        this.monitor = monitor;
+    }
+    
+    public void disparos() {
+        for(int[] t : transiciones) {
+            if(Thread.interrupted())
+                break;
+            
+            try {
+                monitor.disparar(t);
+                TimeUnit.MILLISECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

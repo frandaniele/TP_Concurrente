@@ -6,25 +6,23 @@ public class Politica {
 
     public int decision(int[] candidatos){
         int n = -1;
-        System.out.printf("%s vino a decidir\n", Thread.currentThread().getName());
 
-        for (int i = 0; i < candidatos.length; i++) {
-            if (candidatos[i] > 0) {
-               n = i;
-               break;
-            }
-        }
-
-        if(candidatos[7] > 0)
-            n = 7;
-        if(candidatos[6] > 0)
-            n = 6;
-        if(candidatos[5] > 0)
-            n = 5;
-        if(candidatos[4] > 0)
+        if(candidatos[4] == 1)
             n = 4;
+        else if(candidatos[5] == 1)
+            n = 5;
+        else if(candidatos[6] == 1)
+            n = 6;
+        else if(candidatos[7] == 1)
+            n = 7;
+        else     
+            for (int i = 0; i < candidatos.length; i++) {
+                if (candidatos[i] > 0) {
+                   n = i;
+                   break;
+                }
+            }
 
-        System.out.printf("%s decidio %d \n", Thread.currentThread().getName(), n);
         return n;
     }
 }
