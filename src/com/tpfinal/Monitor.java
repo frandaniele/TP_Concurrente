@@ -65,10 +65,9 @@ public class Monitor {
             }
             else 
                 System.out.println(Thread.currentThread().getName() + " no desperto a nadie xq en esa cola no habia");
-            }
+        }
         else
             System.out.println(Thread.currentThread().getName() + " no desperto a nadie");
-
     }
 
     /*

@@ -29,7 +29,7 @@ public abstract class Trabajador {
             
             try {
                 monitor.disparar(t);
-                TimeUnit.MILLISECONDS.sleep(3);
+                TimeUnit.MILLISECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
