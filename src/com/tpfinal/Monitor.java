@@ -7,11 +7,13 @@ public class Monitor {
     private Semaphore[] colas;
     private RedDePetri rdp;
     private Politica politica;
+    private Tiempo tiempo;
     private int nTransicionesRed;
     private int[] tInvariantes = {0, 0, 0};
 
-    public Monitor(RedDePetri rdp, Politica politica) {
+    public Monitor(RedDePetri rdp, Politica politica, Tiempo tiempo) {
         this.rdp = rdp;
+        this.tiempo = tiempo;
         this.politica = politica;
         mutexMonitor = new Semaphore(1, true);
         
@@ -78,13 +80,19 @@ public class Monitor {
         for (int i = 0; i < t.length; i++) {
             if (t[i] == 1) {
                 try {
-                    System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
-                    colas[i].acquire();
+                    if(tiempo.getTiempoDeSensibilizado()[i] != 0) {//ya fue sensibilizada, estoy esperando entrar en ventana
+                        System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
+                        Thread.sleep(tiempo.calcularTiempoRestante(i));
+                    }
+                    else {// es instantanea o todavia no corre el tiempo
+                        System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
+                        colas[i].acquire();
+                    }
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
                     System.exit(0);
                 }
-                break;
+                return;
             }
         }
     }

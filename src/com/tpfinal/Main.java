@@ -43,10 +43,16 @@ public class Main {
         final int[] t10 = {0,1,0,0,0,0,0,0,0,0,0};
         final int[] t11 = {0,0,1,0,0,0,0,0,0,0,0};
 
+        //int[] temporizadas = {0,0,0,0,0,0,0,0,0,0,0};
+        int[] temporizadas = {0,1,1,1,1,1,1,1,0,1,1};
+        long[] alfas = {0,5,4,4,1,1,1,1,0,1,2};
+        long[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
+        Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
+
         Log log = Log.getInstance();
-        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, log);
+        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, log, tiempo);
         Politica politica = new Politica();
-        Monitor monitor = new Monitor(rdp, politica);
+        Monitor monitor = new Monitor(rdp, politica, tiempo);
 
         Operario[] grupo1 = new Operario[3];
         Operario[] grupo2 = new Operario[3];
@@ -94,7 +100,6 @@ public class Main {
         }
 
         System.out.println("\n-----------------INVARIANTES-----------------------");
-
         
         monitor.getCuantosDeCada();
 
@@ -103,7 +108,7 @@ public class Main {
         for (Thread thread : threads) {
             thread.interrupt();
         }
-
+        
         System.out.println("-------------------MAIN END------------------------");
     }
 }

@@ -11,12 +11,15 @@ public class RedDePetri {
 
     private Log log;
 
-    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, Log log) {
+    private Tiempo tiempo;
+
+    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, Log log, Tiempo tiempo) {
         this.marcado = m0;
         this.pInvariantes = invariantesPlaza;
         this.tSensibilizadas = tSensibilizadas;
         this.matrizIncidencia = matriz;
         this.log = log;
+        this.tiempo = tiempo;
     }
 
     /**
@@ -61,8 +64,12 @@ public class RedDePetri {
             }
         }
 
-        if(selector != -1)
-            return tSensibilizadas[selector] == 1;
+        if(selector != -1) {
+            if(tiempo.getTransicionesTemporizadas()[selector] == 1) //es temporizada
+                return tSensibilizadas[selector] == 1 && tiempo.enVentana(selector);
+            else
+                return tSensibilizadas[selector] == 1;//es instantanea
+        }
         else 
             return false;
     }
@@ -85,6 +92,7 @@ public class RedDePetri {
             suma[i] = marcado[i] + multiplicacion[i];
 
         marcado = suma;
+        calcularSensibilizadas();
     }
 
     /**
@@ -103,6 +111,7 @@ public class RedDePetri {
      * transiciones sensibilizadas
      */
     private void calcularSensibilizadas(){
+        int[] aux = tSensibilizadas.clone();
         for(int i = 0; i < getCantidadTransiciones(); i++){
             tSensibilizadas[i] = 1;
             
@@ -113,6 +122,18 @@ public class RedDePetri {
                         break;
                     }
                 }
+            }
+        }
+
+        for(int i = 0; i < aux.length; i++) {
+            if(aux[i] == 0 && tSensibilizadas[i] == 1){
+                tiempo.sensibilizarTiempo(i);
+            }
+            else if(aux[i] == 1 && tSensibilizadas[i] == 0){
+                tiempo.resetTiempo(i);
+            }
+            else if(aux[i] == 1 && tSensibilizadas[i] == 1){
+                tiempo.actualizarQ(i);
             }
         }
     }
