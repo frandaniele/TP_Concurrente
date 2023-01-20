@@ -1,37 +1,57 @@
-@startuml diags
-
-class Capataz {
-    - Monitor monitor
-    - int t
-    + run (  )    
-}
+@startuml clases
 
 class Trabajador {
-    - Monitor monitor
-    - int t1
-    - int t2
-    - int t3
-    - int t4
+    # Monitor monitor
+    # int[][] transiciones
+    + disparos (  )    
+}
+
+class Capataz {
     + run (  )    
 }
 
 class Pasante {
-    - Monitor monitor
-    - int t1
-    - int t2
+    + run (  )    
+}
+
+class Operario {
     + run (  )    
 }
 
 class Politica {
-    
+    + int decision ( int[] )
+}
+
+class Tiempo {
+    - int[] transicionesTemporizadas
+    - long[] tiempoDeSensibilizado
+    - long[] alfas
+    - long[] betas
+    - long[] q
+    + actualizarQ ( int )
+    + sensibilizarTiempo ( int )
+    + resetTiempo ( int )
+    + enVentana ( int )
+    + int calcularTiempoRestante ( int )
+    + int[] getTransicionesTemporizadas
+    + long[] getTiempoDeSensibilizado(  )
+}
+
+class Log {
+    - String output
+    - Log instance
+    + Log getInstance (  )
+    + escribirLog ( String )
+    + writeFile (  )
 }
 
 class RedDePetri {
     - int[] marcado
-    - int[] m0
     - int[] pInvariantes
     - int[][] matrizIncidencia
     - int[] tSensibilizadas
+    - Log log
+    - Tiempo tiempo
     + boolean disparar ( int[] )
     + int[] getTransicionesSensibilizadas (  )
     + int getCantidadTransiciones (  )
@@ -40,6 +60,7 @@ class RedDePetri {
     - calcularNuevoEstado ( int[] )
     - calcularSensibilizadas (  )
     - int getMarcadoPlaza ( int )
+    - int traducirTransicion ( int[] )
 
 }
 
@@ -48,22 +69,25 @@ class Monitor {
     - Semaphore[] colas
     - RedDePetri rdp
     - Politica politica
-    - int invariantesCompletados
+    - Tiempo tiempo
     - int nTransicionesRed
     - int[] tInvariantes
     + disparar ( int[] )
-    + boolean getState (  )
+    + boolean seguirDisparando (  )
+    + addInvariante ( int[] )
     + getCuantosDeCada (  )
-    - int getInvariantesCompletados (  )
-    - verColas (  )
+    - int[] obtenerVectorM (  )
+    - signal (  )
     - dormir ( int[] )
+    - traducirTransicion ( int[] )
 }
 
 class Main {
     + main ( String[] )
-    - Trabajador[] grupo1
-    - Trabajador[] grupo2
-    - Thread[] threads
+    - int[] pInvariantes
+    - int[][] matrizIncidencia
+    - int[] m0
+    - int[] tSensibilizadas
     - int[] t1
     - int[] t2
     - int[] t3
@@ -75,11 +99,19 @@ class Main {
     - int[] t9
     - int[] t10
     - int[] t11
+    - int[] temporizadas
+    - long[] alfas
+    - long[] betas
+    - Tiempo tiempo
+    - Log log
     - RedDePetri rdp
     - Politica politica
     - Monitor monitor
+    - Operario[] grupo1
+    - Operario[] grupo2
     - Capataz capataz
     - Pasante pasante
+    - Thread[] threads
 }
 
 class Semaphore {
@@ -95,25 +127,43 @@ class Thread {
 
 interface Runnable
 
+class FileWriter
+
+class PrintWriter
+
 Monitor --> Semaphore
 RedDePetri <- Monitor
 Monitor -> Politica
 
 Runnable <|-. Capataz
-Runnable <|-. Trabajador
+Runnable <|-. Operario
 Runnable <|-. Pasante
 Runnable <|-. Thread
 
+Trabajador <|-- Capataz
+Trabajador <|-- Operario
+Trabajador <|-- Pasante
+
 Capataz --> Monitor
 Pasante --> Monitor
-Trabajador --> Monitor
+Operario --> Monitor
 
+Main --> Tiempo
+Main --> Log
 Main ----> Capataz
-Main ----> Trabajador
+Main ----> Operario
 Main ----> Pasante
 Main ----> Thread
 Main ----> RedDePetri
 Main ----> Politica
 Main -----> Monitor
+
+Tiempo <-- Monitor
+Tiempo <-- RedDePetri
+
+Log --> Log
+FileWriter <- Log
+Log -> PrintWriter
+Log <-- RedDePetri
 
 @enduml

@@ -1,0 +1,84 @@
+@startuml secuencia
+
+actor trabajador1 
+actor trabajador2 
+
+trabajador1 -> Monitor: disparar(transicion)
+
+Monitor -> mutexMonitor: acquire()
+mutexMonitor --> Monitor
+
+Monitor -> RedDePetri: disparar(transicion)
+
+RedDePetri -> RedDePetri: evaluarDisparo(transicion)
+
+RedDePetri -> Tiempo: getTransicionesTemporizadas(transicion)
+Tiempo --> RedDePetri: esTemporizada
+
+alt esTemporizada == true
+    RedDePetri -> Tiempo: enVentana(transicion)
+    Tiempo --> RedDePetri: enVentana
+
+    alt enVentana == true
+        RedDePetri --> RedDePetri: puedeDisparar == (sensibilizadas[transicion] == 1)
+    else enVentana == false
+        RedDePetri --> RedDePetri: puedeDisparar == false
+    end
+else esTemporizada == false
+    RedDePetri --> RedDePetri: puedeDisparar == (sensibilizadas[transicion] == 1)
+end
+
+alt puedeDisparar == true
+    RedDePetri -> RedDePetri: Marcado(j+1) = Marcado(j) + I * sigma
+    RedDePetri -> RedDePetri: calcularSensibilizadas()
+    RedDePetri -> RedDePetri: checkPInvariantes()
+
+    RedDePetri -> Log: escribirLog(transicion)
+    Log --> RedDePetri
+end
+
+RedDePetri --> RedDePetri: dispare == puedeDisparar
+
+RedDePetri --> Monitor: dispare
+
+Monitor -> RedDePetri: getTransicionesSensibilizadas()
+RedDePetri --> Monitor: sensibilizadas
+
+Monitor -> colas: quienesEstan()
+colas --> Monitor: quienesEstan
+
+Monitor -> Monitor: m = sensibilizadas & \nquienesEstan
+
+Monitor -> Politica: decision(m)
+Politica --> Monitor: aDespertar
+
+alt aDespertar > 0
+    Monitor -> colas: release()
+    colas --> Monitor
+    Monitor --> trabajador2: se despierta el hilo
+end
+
+Monitor -> mutexMonitor: release()
+mutexMonitor --> Monitor
+
+alt dispare != true
+    Monitor -> Tiempo: getTiempoDeSensibilizado(transicion)
+    Tiempo --> Monitor: sensibilizadaTemporal
+
+    alt sensibilizadaTemporal != 0
+        Monitor -> Tiempo: calcularTiempoRestante(transicion)
+        Tiempo --> Monitor: tiempoRestante
+
+        Monitor -> trabajador1: sleep(tiempoRestante)
+        trabajador1 --> Monitor
+    else sensibilizadaTemporal == 0
+        Monitor -> colas: acquire()
+        colas --> Monitor
+    end
+
+    Monitor -> Monitor: disparar(transicion)
+end
+
+Monitor --> trabajador1
+
+@enduml
