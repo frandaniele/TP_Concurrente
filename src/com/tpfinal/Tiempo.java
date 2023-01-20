@@ -20,66 +20,64 @@ public class Tiempo {
         }
     }
 
+    /**
+     * actualiza la posicion indicada por index
+     * del vector q de tiempo de las transiciones 
+     * con el tiempo que paso desde que sensibilizo
+     * @param index
+     */
     public void actualizarQ(int index) {
         q[index] = System.currentTimeMillis() - tiempoDeSensibilizado[index];
     }
 
+    /**
+     * marco el tiempo en que se sensibilizo 
+     * la transicion correspondiente a index
+     * @param index
+     */
     public void sensibilizarTiempo(int index) {
         tiempoDeSensibilizado[index] = System.currentTimeMillis();
         q[index] = tiempoDeSensibilizado[index];
     }
 
-    public void resetTiempo(int index) {
-        tiempoDeSensibilizado[index] = 0;
-        q[index] = 0;
-    }
-
+    /**
+     * testea si una transicion se encuentra en
+     * su ventana de disparo
+     * @param index
+     * @return true si el tiempo que paso desde
+     * el sensibilizado de la transicion
+     * esta entre los limites de disparo, 
+     * false en caso contrario
+     */
     public boolean enVentana(int index) {
         return q[index] > alfas[index] && q[index] <= betas[index];
     }
 
+    /**
+     * calcula cuanto tiempo le falta
+     * a una transicion para poder dispararse
+     * @param index
+     * @return el tiempo restante para alcanzar el alfa de tiempo
+     */
     public int calcularTiempoRestante(int index) {
         int dormir = (int)(alfas[index] - q[index]);
         return dormir > 0 ? dormir : 0;
+    }
+
+    /*
+     * resetea los vectores de tiempo
+     * de una transicion
+     */
+    public void resetTiempo(int index) {
+        tiempoDeSensibilizado[index] = 0;
+        q[index] = 0;
     }
 
     public int[] getTransicionesTemporizadas() {
         return transicionesTemporizadas;
     }
 
-    public void setTransicionesTemporizadas(int[] transicionesTemporizadas) {
-        this.transicionesTemporizadas = transicionesTemporizadas;
-    }
-
-    public long[] getAlfas() {
-        return alfas;
-    }
-
-    public void setAlfas(long[] alfas) {
-        this.alfas = alfas;
-    }
-
-    public long[] getBetas() {
-        return betas;
-    }
-
-    public void setBetas(long[] betas) {
-        this.betas = betas;
-    }
-
     public long[] getTiempoDeSensibilizado() {
         return tiempoDeSensibilizado;
-    }
-
-    public void setTiempoDeSensibilizado(long[] tiempoDeSensibilizado) {
-        this.tiempoDeSensibilizado = tiempoDeSensibilizado;
-    }
-
-    public long[] getQ() {
-        return q;
-    }
-
-    public void setQ(long[] q) {
-        this.q = q;
     }
 }
