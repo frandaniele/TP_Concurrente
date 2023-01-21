@@ -1,58 +1,55 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><pnml>
     <net id="Net-One" type="P/T net">
         <token id="Default" enabled="true" red="0" green="0" blue="0"/>
-        <labels x="462" y="130" width="66" height="24" border="true">
+        <labels x="464" y="132" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="477" y="402" width="66" height="24" border="true">
+        <labels x="479" y="404" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="464" y="299" width="66" height="24" border="true">
+        <labels x="466" y="301" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="250" y="199" width="66" height="24" border="true">
+        <labels x="252" y="201" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="340" y="70" width="66" height="24" border="true">
+        <labels x="342" y="72" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="46" y="174" width="66" height="24" border="true">
+        <labels x="48" y="176" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="706" y="400" width="66" height="24" border="true">
+        <labels x="708" y="402" width="68" height="26" border="true">
             <text>Recursos</text>
         </labels>
-        <labels x="112" y="93" width="53" height="21" border="true">
+        <labels x="114" y="95" width="55" height="23" border="true">
             <text>Tarea1</text>
         </labels>
-        <labels x="436" y="91" width="53" height="21" border="true">
-            <text>Tarea1</text>
-        </labels>
-        <labels x="180" y="233" width="53" height="21" border="true">
+        <labels x="182" y="235" width="55" height="23" border="true">
             <text>Tarea2</text>
         </labels>
-        <labels x="372" y="169" width="53" height="21" border="true">
+        <labels x="374" y="171" width="55" height="23" border="true">
             <text>Tarea3</text>
         </labels>
-        <labels x="256" y="284" width="53" height="21" border="true">
+        <labels x="258" y="286" width="55" height="23" border="true">
             <text>Tarea4</text>
         </labels>
-        <labels x="270" y="382" width="53" height="21" border="true">
+        <labels x="272" y="384" width="55" height="23" border="true">
             <text>Tarea5</text>
         </labels>
-        <labels x="563" y="381" width="53" height="21" border="true">
+        <labels x="565" y="383" width="55" height="23" border="true">
             <text>Tarea6</text>
         </labels>
-        <labels x="671" y="267" width="53" height="21" border="true">
+        <labels x="673" y="269" width="55" height="23" border="true">
             <text>Tarea7</text>
         </labels>
-        <labels x="673" y="157" width="53" height="21" border="true">
+        <labels x="675" y="159" width="55" height="23" border="true">
             <text>Tarea8</text>
         </labels>
-        <labels x="59" y="307" width="79" height="30" border="true">
+        <labels x="61" y="309" width="81" height="32" border="true">
             <text>Trabajadores</text>
         </labels>
-        <labels x="813" y="269" width="79" height="30" border="true">
+        <labels x="815" y="271" width="81" height="32" border="true">
             <text>Trabajadores</text>
         </labels>
         <place id="P1">
@@ -690,8 +687,8 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="27" y="252" curvePoint="false"/>
-            <arcpath id="001" x="40" y="50" curvePoint="false"/>
+            <arcpath id="000" x="28" y="252" curvePoint="false"/>
+            <arcpath id="001" x="42" y="52" curvePoint="false"/>
             <arcpath id="002" x="177" y="41" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -848,7 +845,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="763" y="281" curvePoint="false"/>
-            <arcpath id="001" x="773" y="425" curvePoint="false"/>
+            <arcpath id="001" x="775" y="427" curvePoint="false"/>
             <arcpath id="002" x="641" y="417" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -1018,7 +1015,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="642" y="101" curvePoint="false"/>
-            <arcpath id="001" x="773" y="110" curvePoint="false"/>
+            <arcpath id="001" x="775" y="112" curvePoint="false"/>
             <arcpath id="002" x="763" y="252" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -1032,8 +1029,8 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="162" y="272" curvePoint="false"/>
-            <arcpath id="001" x="160" y="275" curvePoint="false"/>
-            <arcpath id="002" x="41" y="267" curvePoint="false"/>
+            <arcpath id="001" x="162" y="277" curvePoint="false"/>
+            <arcpath id="002" x="41" y="268" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="T2 to P11" source="T11" target="P4">
@@ -1176,7 +1173,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="327" y="416" curvePoint="false"/>
-            <arcpath id="001" x="40" y="425" curvePoint="false"/>
+            <arcpath id="001" x="42" y="427" curvePoint="false"/>
             <arcpath id="002" x="28" y="281" curvePoint="false"/>
             <type value="normal"/>
         </arc>
