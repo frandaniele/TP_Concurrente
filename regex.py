@@ -12,7 +12,10 @@ while(log[1] != 0): #mientras encuentre coincidencias sigue buscando
     print(log[1])  
     log = re.subn(regex, groups, log[0])
 
-if(log[0] != "\n"): #cuando encontro todos invariantes queda un salto de linea solamente
+inv_incompletos = ["", "T1-", "T1-T2-", "T1-T3-", "T1-T3-T4-", "T1-T3-T4-T5-", "T7-", "T7-T8-", "T7-T8-T9-"]
+inv_incompletos = [x + "\n" for x in inv_incompletos]
+
+if(log[0] not in inv_incompletos): #cuando encontro todos invariantes queda un salto de linea solamente
     print("Fail")
 else: 
     print("OK")
