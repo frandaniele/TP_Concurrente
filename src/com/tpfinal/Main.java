@@ -45,8 +45,8 @@ public class Main {
 
         //int[] temporizadas = {0,0,0,0,0,0,0,0,0,0,0};
         int[] temporizadas = {0,1,1,1,1,1,1,1,0,1,1};
-        long[] alfas = {0,5,4,4,1,1,1,1,0,1,2};
-        long[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
+        double[] alfas = {0,5,5,2,1.5,1,1,1,0,1,2};
+        double[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
         Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
 
         Log log = Log.getInstance();

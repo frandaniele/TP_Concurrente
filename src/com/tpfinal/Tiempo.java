@@ -2,18 +2,18 @@ package com.tpfinal;
 
 public class Tiempo {
     private int[] transicionesTemporizadas;
-    private long[] tiempoDeSensibilizado;
-    private long[] alfas;
-    private long[] betas;
-    private long[] q;
+    private double[] tiempoDeSensibilizado;
+    private double[] alfas;
+    private double[] betas;
+    private double[] q;
 
-    public Tiempo(int[] transicionesTemporizadas, long[] alfas, long[] betas) {
+    public Tiempo(int[] transicionesTemporizadas, double[] alfas, double[] betas) {
         this.transicionesTemporizadas = transicionesTemporizadas;
         this.alfas = alfas;
         this.betas = betas;
         
-        q = new long[transicionesTemporizadas.length];
-        tiempoDeSensibilizado = new long[transicionesTemporizadas.length];
+        q = new double[transicionesTemporizadas.length];
+        tiempoDeSensibilizado = new double[transicionesTemporizadas.length];
         for(int i = 0; i < q.length; i++) {
             q[i] = 0;
             tiempoDeSensibilizado[i] = 0;
@@ -37,7 +37,6 @@ public class Tiempo {
      */
     public void sensibilizarTiempo(int index) {
         tiempoDeSensibilizado[index] = System.currentTimeMillis();
-        q[index] = tiempoDeSensibilizado[index];
     }
 
     /**
@@ -50,7 +49,7 @@ public class Tiempo {
      * false en caso contrario
      */
     public boolean enVentana(int index) {
-        return q[index] > alfas[index] && q[index] <= betas[index];
+        return q[index] >= alfas[index] && q[index] <= betas[index];
     }
 
     /**
@@ -59,8 +58,8 @@ public class Tiempo {
      * @param index
      * @return el tiempo restante para alcanzar el alfa de tiempo
      */
-    public int calcularTiempoRestante(int index) {
-        int dormir = (int)(alfas[index] - q[index]);
+    public double calcularTiempoRestante(int index) {
+        double dormir = alfas[index] - q[index];
         return dormir > 0 ? dormir : 0;
     }
 
@@ -77,7 +76,7 @@ public class Tiempo {
         return transicionesTemporizadas;
     }
 
-    public long[] getTiempoDeSensibilizado() {
+    public double[] getTiempoDeSensibilizado() {
         return tiempoDeSensibilizado;
     }
 }

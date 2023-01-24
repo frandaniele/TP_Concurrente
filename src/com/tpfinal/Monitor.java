@@ -81,8 +81,11 @@ public class Monitor {
             if (t[i] == 1) {
                 try {
                     if(tiempo.getTiempoDeSensibilizado()[i] != 0) {//ya fue sensibilizada, estoy esperando entrar en ventana
-                        System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
-                        Thread.sleep(tiempo.calcularTiempoRestante(i));
+                        double aDormir = tiempo.calcularTiempoRestante(i);                        
+                        if(aDormir > 0){
+                            System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
+                            Thread.sleep((long)aDormir);
+                        }
                     }
                     else {// es instantanea o todavia no corre el tiempo
                         System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
