@@ -57,7 +57,9 @@ public class Monitor {
      * y suelto el mutex del monitor
      */
     private void signal() {
-        int aDespertar = politica.decision(obtenerVectorM());
+        //int aDespertar = politica.decision(obtenerVectorM());
+        int aDespertar = politica.decisionCompleja(obtenerVectorM(), tInvariantes, rdp.getmapaTransicionesInvariantes());
+
         System.out.println(Thread.currentThread().getName() + " vino aDespertar");
                 
         if(aDespertar != -1){

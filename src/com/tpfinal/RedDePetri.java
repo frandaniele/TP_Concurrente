@@ -6,22 +6,25 @@ public class RedDePetri {
     private final int[] pInvariantes;
 
     private final int[][] matrizIncidencia;
-
+    
     private int[] tSensibilizadas;
+
+    private final int[] mapaTransicionesInvariantes;
 
     private Log log;
 
     private Tiempo tiempo;
 
-    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, Log log, Tiempo tiempo) {
+    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, int[] mapaTransicionesInvariantes, Log log, Tiempo tiempo) {
         this.marcado = m0;
         this.pInvariantes = invariantesPlaza;
         this.tSensibilizadas = tSensibilizadas;
         this.matrizIncidencia = matriz;
+        this.mapaTransicionesInvariantes = mapaTransicionesInvariantes;
         this.log = log;
         this.tiempo = tiempo;
     }
-
+    
     /**
      * se fija si es posible disparar la transicion 
      * en ese caso cambia de estado a la red y
@@ -206,5 +209,9 @@ public class RedDePetri {
 
     public int getCantidadTransiciones(){
         return matrizIncidencia[0].length;
+    }
+
+    public int[] getmapaTransicionesInvariantes() {
+        return mapaTransicionesInvariantes;
     }
 }

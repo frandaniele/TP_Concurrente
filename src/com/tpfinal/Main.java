@@ -43,14 +43,16 @@ public class Main {
         final int[] t10 = {0,1,0,0,0,0,0,0,0,0,0};
         final int[] t11 = {0,0,1,0,0,0,0,0,0,0,0};
 
+        final int[] transicionAInvariante = {-1,1,2,2,0,0,0,0,1,1,1};
+        
         //int[] temporizadas = {0,0,0,0,0,0,0,0,0,0,0};
         int[] temporizadas = {0,1,1,1,1,1,1,1,0,1,1};
-        double[] alfas = {0,5,5,2,1.5,1,1,1,0,1,2};
+        double[] alfas = {0,2.5,1.5,2.5,1,1,1,1,0,1,1};
         double[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
         Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
 
         Log log = Log.getInstance();
-        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, log, tiempo);
+        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, transicionAInvariante, log, tiempo);
         Politica politica = new Politica();
         Monitor monitor = new Monitor(rdp, politica, tiempo);
 
