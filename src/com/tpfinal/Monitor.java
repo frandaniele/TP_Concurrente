@@ -154,8 +154,6 @@ public class Monitor {
             tInvariantes[1]++;
         else if (tr == 11) 
             tInvariantes[2]++;
-
-        System.out.println("invariantes: " + (tInvariantes[0] + tInvariantes[1] + tInvariantes[2]));
     }
 
     /**
