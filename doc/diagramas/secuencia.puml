@@ -54,29 +54,24 @@ Politica --> Monitor: aDespertar
 
 alt aDespertar > 0
     Monitor -> colas: release()
-    colas --> Monitor
+    colas --> Monitor: desperte == true
     Monitor --> trabajador2: se despierta el hilo
+else aDespertar == -1
+    colas --> Monitor: desperte == false
 end
 
+alt desperte == false
 Monitor -> mutexMonitor: release()
 mutexMonitor --> Monitor
+end
 
 alt dispare != true
-    Monitor -> Tiempo: getTiempoDeSensibilizado(transicion)
-    Tiempo --> Monitor: sensibilizadaTemporal
-
-    alt sensibilizadaTemporal != 0
-        Monitor -> Tiempo: calcularTiempoRestante(transicion)
-        Tiempo --> Monitor: tiempoRestante
-
-        Monitor -> trabajador1: sleep(tiempoRestante)
-        trabajador1 --> Monitor
-    else sensibilizadaTemporal == 0
-        Monitor -> colas: acquire()
-        colas --> Monitor
-    end
-
-    Monitor -> Monitor: disparar(transicion)
+    Monitor -> colas: acquire()
+    colas --> Monitor
+    Monitor -> RedDePetri: disparar(transicion)
+    RedDePetri --> Monitor: true
+    Monitor -> mutexMonitor: release()
+    mutexMonitor --> Monitor
 end
 
 Monitor --> trabajador1

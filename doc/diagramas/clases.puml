@@ -20,6 +20,7 @@ class Operario {
 
 class Politica {
     + int decision ( int[] )
+    + int decisionCompleja ( int[], int[], int[] )
 }
 
 class Tiempo {
@@ -32,7 +33,6 @@ class Tiempo {
     + sensibilizarTiempo ( int )
     + resetTiempo ( int )
     + enVentana ( int )
-    + int calcularTiempoRestante ( int )
     + int[] getTransicionesTemporizadas
     + long[] getTiempoDeSensibilizado(  )
 }
@@ -61,7 +61,6 @@ class RedDePetri {
     - calcularSensibilizadas (  )
     - int getMarcadoPlaza ( int )
     - int traducirTransicion ( int[] )
-
 }
 
 class Monitor {
@@ -77,9 +76,9 @@ class Monitor {
     + addInvariante ( int[] )
     + getCuantosDeCada (  )
     - int[] obtenerVectorM (  )
-    - signal (  )
-    - dormir ( int[] )
-    - traducirTransicion ( int[] )
+    - boolean signal (  )
+    - colaCondicion ( int[] )
+    - int traducirTransicion ( int[] )
 }
 
 class Main {
@@ -99,6 +98,7 @@ class Main {
     - int[] t9
     - int[] t10
     - int[] t11
+    - int[] transicionAInvariante
     - int[] temporizadas
     - long[] alfas
     - long[] betas
