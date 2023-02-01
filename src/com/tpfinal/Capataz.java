@@ -9,7 +9,10 @@ public class Capataz extends Trabajador implements Runnable{
 
     @Override
     public void run() {
-        while(monitor.seguirDisparando())
+        while(monitor.seguirDisparando()) {
             super.disparos();
+            if(Thread.interrupted())
+                break;
+        }
     }
 }

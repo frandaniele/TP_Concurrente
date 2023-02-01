@@ -11,6 +11,8 @@ public class Pasante extends Trabajador implements Runnable{
     public void run() {
         while(monitor.seguirDisparando()) {
             super.disparos();
+            if(Thread.interrupted())
+                break;
             monitor.addInvariante(transiciones[transiciones.length - 1]);
         }
     }

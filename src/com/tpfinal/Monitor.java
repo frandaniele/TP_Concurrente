@@ -19,7 +19,7 @@ public class Monitor {
         
         nTransicionesRed = rdp.getCantidadTransiciones();
         colas = new Semaphore[nTransicionesRed];
-        for(int i = 0; i < colas.length; i++) {
+        for (int i = 0; i < colas.length; i++) {
             colas[i] = new Semaphore(0, true);
         }
     }
@@ -39,13 +39,15 @@ public class Monitor {
 
             boolean dispare = rdp.disparar(t);
 
-            signal();
+            boolean desperte = signal();
 
-            mutexMonitor.release();
+            if(!desperte)
+                mutexMonitor.release();
 
             if(!dispare) {
-                dormir(t);
-                disparar(t);
+                colaCondicion(t);
+                rdp.disparar(t);
+                mutexMonitor.release();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -56,48 +58,38 @@ public class Monitor {
      * segun la politica despierto a algun hilo (o no)
      * y suelto el mutex del monitor
      */
-    private void signal() {
+    private boolean signal() {
         //int aDespertar = politica.decision(obtenerVectorM());
         int aDespertar = politica.decisionCompleja(obtenerVectorM(), tInvariantes, rdp.getmapaTransicionesInvariantes());
 
         System.out.println(Thread.currentThread().getName() + " vino aDespertar");
                 
-        if(aDespertar != -1){
-            if(colas[aDespertar].hasQueuedThreads()){
-                System.out.println(Thread.currentThread().getName() + " desperto condicion " + aDespertar);
-                colas[aDespertar].release();
-            }
-            else 
-                System.out.println(Thread.currentThread().getName() + " no desperto a nadie xq en esa cola no habia");
+        if (aDespertar != -1) {
+            System.out.println(Thread.currentThread().getName() + " desperto condicion " + aDespertar);
+            colas[aDespertar].release();
+            return true;
         }
         else
             System.out.println(Thread.currentThread().getName() + " no desperto a nadie");
+
+        return false;
     }
 
     /*
      * segun la transicion que intente disparar voy a "dormir"
      * a su cola de condicion
      */
-    private void dormir(int[] t){
+    private void colaCondicion(int[] t) {
         for (int i = 0; i < t.length; i++) {
             if (t[i] == 1) {
                 try {
-                    if(tiempo.getTiempoDeSensibilizado()[i] != 0) {//ya fue sensibilizada, estoy esperando entrar en ventana
-                        double aDormir = tiempo.calcularTiempoRestante(i);                        
-                        if(aDormir > 0){
-                            System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
-                            Thread.sleep((long)aDormir);
-                        }
-                    }
-                    else {// es instantanea o todavia no corre el tiempo
-                        System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
-                        colas[i].acquire();
-                    }
+                    System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
+                    colas[i].acquire();
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
                     System.exit(0);
                 }
-                return;
+                break;//salgo del for
             }
         }
     }
@@ -112,16 +104,16 @@ public class Monitor {
         int[] sensibilizadas = rdp.getTransicionesSensibilizadas();
         int[] quienesEstan = new int[nTransicionesRed];
         
-        for(int i = 0; i < colas.length; i++) {
+        for (int i = 0; i < colas.length; i++) {
+            quienesEstan[i] = 0;
             if (colas[i].hasQueuedThreads()) 
-                quienesEstan[i] = 1;
-            else 
-                quienesEstan[i] = 0;
+                if (tiempo.getTransicionesTemporizadas()[i] == 1 && tiempo.enVentana(i) || tiempo.getTransicionesTemporizadas()[i] == 0)
+                    quienesEstan[i] = 1;
         }
             
         int[] m = new int[nTransicionesRed];
         
-        for(int i = 0; i < m.length; i++){
+        for (int i = 0; i < m.length; i++){
             m[i] = sensibilizadas[i] & quienesEstan[i];
         }
 
@@ -156,12 +148,14 @@ public class Monitor {
      */
     public synchronized void addInvariante(int[] t) {
         int tr = traducirTransicion(t);
-        if(tr == 6) 
+        if (tr == 6) 
             tInvariantes[0]++;
-        else if(tr == 10) 
+        else if (tr == 10) 
             tInvariantes[1]++;
-        else if(tr == 11) 
+        else if (tr == 11) 
             tInvariantes[2]++;
+
+        System.out.println("invariantes: " + (tInvariantes[0] + tInvariantes[1] + tInvariantes[2]));
     }
 
     /**
