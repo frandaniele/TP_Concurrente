@@ -52,17 +52,6 @@ public class Tiempo {
         return q[index] >= alfas[index] && q[index] <= betas[index];
     }
 
-    /**
-     * calcula cuanto tiempo le falta
-     * a una transicion para poder dispararse
-     * @param index
-     * @return el tiempo restante para alcanzar el alfa de tiempo
-     */
-    public double calcularTiempoRestante(int index) {
-        double dormir = alfas[index] - q[index];
-        return dormir > 0 ? dormir : 0;
-    }
-
     /*
      * resetea los vectores de tiempo
      * de una transicion

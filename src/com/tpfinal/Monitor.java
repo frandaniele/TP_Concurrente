@@ -95,7 +95,7 @@ public class Monitor {
     }
 
     /**
-     * segun las transiciones sensibilizadas
+     * segun las transiciones que pueden dispararse
      * y los hilos en colas de condicion
      * obtengo un vector
      * @return vector and logico entre tSens y colas
@@ -107,7 +107,7 @@ public class Monitor {
         for (int i = 0; i < colas.length; i++) {
             quienesEstan[i] = 0;
             if (colas[i].hasQueuedThreads()) 
-                if (tiempo.getTransicionesTemporizadas()[i] == 1 && tiempo.enVentana(i) || tiempo.getTransicionesTemporizadas()[i] == 0)
+                if (tiempo.getTransicionesTemporizadas()[i] == 1 && tiempo.enVentana(i) || tiempo.getTransicionesTemporizadas()[i] == 0)//si es instantanea, o la transicion cumplio su alfa
                     quienesEstan[i] = 1;
         }
             
