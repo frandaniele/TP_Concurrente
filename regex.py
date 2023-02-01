@@ -16,6 +16,7 @@ inv_incompletos = ["", "T1-", "T1-T2-", "T1-T3-", "T1-T3-T4-", "T1-T3-T4-T5-", "
 inv_incompletos = [x + "\n" for x in inv_incompletos]
 
 if(log[0] not in inv_incompletos): #cuando encontro todos invariantes queda un salto de linea solamente
-    print("Fail")
+    print("Luego de matchear todos los invariantes completados, quedó lo siguiente")
+    print(log[0])
 else: 
     print("OK")

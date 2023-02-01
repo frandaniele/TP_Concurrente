@@ -90,12 +90,7 @@ public class Main {
         System.out.println("SE ARRANCO");
 
         try {
-            threads[0].join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
+            threads[0].join(8000);
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ public class Trabajador {
     public void disparos() {
         for(int[] t : transiciones) {
             if(Thread.interrupted())
-                break;
+                return;
             
             try {
                 monitor.disparar(t);
