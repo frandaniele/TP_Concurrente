@@ -28,7 +28,7 @@ public class Monitor {
      * obtengo acceso al monitor o quedo en la cola de entrada. 
      * luego intento disparar, si pude se cambio el estado de la red
      * si hay alguien en cola de condicion despierto segun la politica y suelto el monitor
-     * sino pude disparar me voy a dormir (cola condicion) y cuando despierto vuelvo a intentar disparar
+     * sino pude disparar me voy a dormir (cola condicion o espero un tiempo) y cuando despierto vuelvo a intentar disparar
      * @param t
      */
     public void disparar(int[] t) {
@@ -41,13 +41,19 @@ public class Monitor {
 
             boolean desperte = signal();
 
-            if(!desperte)
+            if (!desperte) // si desperte, el hilo despertado se encarga de liberar el mutex
                 mutexMonitor.release();
 
-            if(!dispare) {
-                colaCondicion(t);
-                rdp.disparar(t);
-                mutexMonitor.release();
+            if (!dispare) {
+                if (rdp.estaSensibilizada(t)) {//debo esperar hasta cumplir el tiempo alfa
+                    dormir(t);
+                    disparar(t);//cuando me despierto vuelvo a entrar al metodo del monitor
+                }
+                else {
+                    colaCondicion(t);
+                    rdp.disparar(t);//cuando me despiertan significa que puedo disparar instantaneamente
+                    mutexMonitor.release();//libero el mutex
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -86,10 +92,36 @@ public class Monitor {
                     System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
                     colas[i].acquire();
                 } catch (InterruptedException e) {
+                    System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " esperando condicion.");
+                    System.exit(0);
+                }
+                return;//salgo del for
+            }
+        }
+    }
+
+    /**
+     * cuando un hilo quiere disparar una transicion sensibilizada
+     * pero debe esperar un tiempo para llegar a su alfa
+     * calcula el tiempo y se pone a dormir
+     * @param t
+     */
+    private void dormir(int[] t) {
+        for (int i = 0; i < t.length; i++) {
+            if (t[i] == 1) {
+                try {
+                    if(tiempo.getTiempoDeSensibilizado()[i] != 0) {//ya fue sensibilizada, estoy esperando entrar en ventana
+                        double aDormir = tiempo.calcularTiempoRestante(i);                        
+                        if(aDormir > 0){
+                            System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
+                            Thread.sleep((long)aDormir);
+                        }
+                    }
+                } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
                     System.exit(0);
                 }
-                break;//salgo del for
+                return;//salgo del for
             }
         }
     }

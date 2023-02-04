@@ -108,6 +108,20 @@ public class RedDePetri {
     }
 
     /**
+     * chequea si una transicion esta sensibilizada
+     * @param transicion
+     * @return true si la transicion esta sensibilizada , false si no
+     */
+    public boolean estaSensibilizada(int[] transicion) {
+        for (int i = 0; i < transicion.length; i++) {
+            if (transicion[i] == 1)
+                return tSensibilizadas[i] == 1;
+        }
+
+        return false;
+    }
+
+    /**
      * segun la matriz de incidencia 
      * y el marcado actual de la red
      * calcula y actualiza el vector de las 
