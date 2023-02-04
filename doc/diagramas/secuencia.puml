@@ -66,12 +66,22 @@ mutexMonitor --> Monitor
 end
 
 alt dispare != true
-    Monitor -> colas: acquire()
-    colas --> Monitor
-    Monitor -> RedDePetri: disparar(transicion)
-    RedDePetri --> Monitor: true
-    Monitor -> mutexMonitor: release()
-    mutexMonitor --> Monitor
+    Monitor -> RedDePetri: estaSensibilizada(transicion)
+    RedDePetri --> Monitor: estaSensibilizada
+    alt estaSensibilizada == true
+        Monitor -> Tiempo: calcularTiempoRestante(transicion)
+        Tiempo --> Monitor: aDormir
+        Monitor -> trabajador1: sleep(aDormir)
+        trabajador1 --> Monitor
+        Monitor -> Monitor: disparar(transicion)
+    else estaSensibilizada == false
+        Monitor -> colas: acquire()
+        colas --> Monitor
+        Monitor -> RedDePetri: disparar(transicion)
+        RedDePetri --> Monitor: true
+        Monitor -> mutexMonitor: release()
+        mutexMonitor --> Monitor
+    end
 end
 
 Monitor --> trabajador1

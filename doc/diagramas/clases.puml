@@ -33,7 +33,8 @@ class Tiempo {
     + sensibilizarTiempo ( int )
     + resetTiempo ( int )
     + enVentana ( int )
-    + int[] getTransicionesTemporizadas
+    + int[] getTransicionesTemporizadas (  )
+    + int calcularTiempoRestante ( int )
     + long[] getTiempoDeSensibilizado(  )
 }
 
@@ -55,6 +56,7 @@ class RedDePetri {
     + boolean disparar ( int[] )
     + int[] getTransicionesSensibilizadas (  )
     + int getCantidadTransiciones (  )
+    + boolean estaSensibilizada ( int[] )
     + boolean checkPInvariantes (  )
     - boolean evaluarDisparo ( int[] )
     - calcularNuevoEstado ( int[] )
@@ -78,6 +80,7 @@ class Monitor {
     - int[] obtenerVectorM (  )
     - boolean signal (  )
     - colaCondicion ( int[] )
+    - dormir ( int[] )
     - int traducirTransicion ( int[] )
 }
 
