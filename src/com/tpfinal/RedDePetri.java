@@ -59,6 +59,8 @@ public class RedDePetri {
      * @return true si puedo disparar la transicion, false si no
      */
     private boolean evaluarDisparo(int[] t){
+        calcularSensibilizadas();
+
         int selector = -1;
         for(int i = 0; i < t.length; i++){
             if(t[i] == 1){
@@ -95,7 +97,6 @@ public class RedDePetri {
             suma[i] = marcado[i] + multiplicacion[i];
 
         marcado = suma;
-        calcularSensibilizadas();
     }
 
     /**
@@ -142,15 +143,16 @@ public class RedDePetri {
             }
         }
 
+        double now = System.currentTimeMillis();
         for(int i = 0; i < aux.length; i++) {
             if(aux[i] == 0 && tSensibilizadas[i] == 1){
-                tiempo.sensibilizarTiempo(i);
+                tiempo.sensibilizarTiempo(i, now);
             }
             else if(aux[i] == 1 && tSensibilizadas[i] == 0){
                 tiempo.resetTiempo(i);
             }
             else if(aux[i] == 1 && tSensibilizadas[i] == 1){
-                tiempo.actualizarQ(i);
+                tiempo.actualizarQ(i, now);
             }
         }
     }

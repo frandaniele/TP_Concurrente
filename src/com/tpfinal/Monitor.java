@@ -34,7 +34,7 @@ public class Monitor {
     public void disparar(int[] t) {
         try {
             mutexMonitor.acquire();
-
+            
             System.out.println(Thread.currentThread().getName() + " va a intentar disparar");
 
             boolean dispare = rdp.disparar(t);
@@ -55,7 +55,8 @@ public class Monitor {
                     mutexMonitor.release();//libero el mutex
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
+            mutexMonitor.release();
             e.printStackTrace();
         } 
     }
@@ -67,7 +68,7 @@ public class Monitor {
     private boolean signal() {
         //int aDespertar = politica.decision(obtenerVectorM());
         int aDespertar = politica.decisionCompleja(obtenerVectorM(), tInvariantes, rdp.getmapaTransicionesInvariantes());
-
+                
         System.out.println(Thread.currentThread().getName() + " vino aDespertar");
                 
         if (aDespertar != -1) {
@@ -145,9 +146,8 @@ public class Monitor {
             
         int[] m = new int[nTransicionesRed];
         
-        for (int i = 0; i < m.length; i++){
+        for (int i = 0; i < m.length; i++)
             m[i] = sensibilizadas[i] & quienesEstan[i];
-        }
 
         return m;
     }
@@ -217,9 +217,9 @@ public class Monitor {
     private void getTiempoTotalInvariantes() {
         double[] tiempoInvariantes = tiempo.getTiempoMinInvariantes();
 
-
-        System.out.println("Minimo total de disparar " + tInvariantes[0] + " T1-T3-T4-T5-T6 es: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]) + " segundos.");
-        System.out.println("Minimo total de disparar " + tInvariantes[1] + " T7-T8-T9-T10 es: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]) + " segundos.");
-        System.out.println("Minimo total de disparar " + tInvariantes[2] + " T1-T2-T11 es: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]) + " segundos.");
+        System.out.println("-----------------------TIEMPO----------------------");
+        System.out.println("T1-T3-T4-T5-T6\n\tUna vuelta: " + tiempoInvariantes[0] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]) + "[s]");
+        System.out.println("T7-T8-T9-T10\n\tUna vuelta: " + tiempoInvariantes[1] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]) + "[s]");
+        System.out.println("T1-T2-T11\n\tUna vuelta: " + tiempoInvariantes[2] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]) + "[s]");
     }
 }

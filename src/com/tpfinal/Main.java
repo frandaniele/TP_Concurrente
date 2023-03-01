@@ -3,8 +3,6 @@ package com.tpfinal;
 public class Main {
 
     public static void main(String[] args) {
-        double start_time = System.currentTimeMillis();
-
         final int[] pInvariantes = {3, 1, 3, 2, 1, 1, 1, 1, 2};
 
         final int[][] matrizIncidencia = {
@@ -56,7 +54,7 @@ public class Main {
         /*-------- Instanciamos los objetos necesarios del sistema --------*/
         //int[] temporizadas = {0,0,0,0,0,0,0,0,0,0,0};
         int[] temporizadas = {0,1,1,1,1,1,1,1,0,1,1};
-        double[] alfas = {0,2.5,1.5,2,1,1,1,1,0,1,1};
+        double[] alfas = {0,2.5,3.5,2,1,1,1,1,0,1,1};
         double[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
         Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
 
@@ -99,10 +97,13 @@ public class Main {
                 thread.start();
         }
 
-        System.out.println("SE ARRANCO");
+        double start_time = System.currentTimeMillis();
+        System.out.println("Comenzo la jornada laboral.");
 
+        double end_time = 0;
         try {
             threads[0].join(8000);//espero a que el capataz termine de ejecutar
+            end_time = System.currentTimeMillis() - start_time;
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -111,15 +112,13 @@ public class Main {
         for (Thread thread : threads) {
             thread.interrupt();//si quedaron hilos durmiendo los interrumpo
         }
+
+        System.out.println("\nFin de la jornada. Duracion:  " + String.format("%.2f", end_time/1000) + " segundos.");
       
         monitor.getResultados();//imprimo cuantos invariantes se dispararon
 
         log.writeFile();//escribo el archivo log.txt
 
-        System.out.println("-------------------MAIN END------------------------");
-
-        double end_time = System.currentTimeMillis() - start_time;
-
-        System.out.println("El programa se ejecuto en:  " + String.format("%.2f", end_time/1000) + " segundos.");
+        System.out.println("\n-------------------MAIN END------------------------");
     }
 }
