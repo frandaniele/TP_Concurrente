@@ -13,14 +13,11 @@ public class Trabajador {
      */
     public void disparos() {
         for(int[] t : transiciones) {
-            if(Thread.interrupted())
-                return;
-            
             try {
                 monitor.disparar(t);
                 TimeUnit.MILLISECONDS.sleep(1);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }

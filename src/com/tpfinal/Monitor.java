@@ -57,7 +57,7 @@ public class Monitor {
             }
         } catch (Exception e) {
             mutexMonitor.release();
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         } 
     }
 
@@ -94,7 +94,7 @@ public class Monitor {
                     colas[i].acquire();
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " esperando condicion.");
-                    System.exit(0);
+                    Thread.currentThread().interrupt();
                 }
                 return;//salgo del for
             }
@@ -120,7 +120,7 @@ public class Monitor {
                     }
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
-                    System.exit(0);
+                    Thread.currentThread().interrupt();
                 }
                 return;//salgo del for
             }
