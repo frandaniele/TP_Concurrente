@@ -6,6 +6,7 @@ public class Tiempo {
     private double[] alfas;
     private double[] betas;
     private double[] q;
+    private double[] tiempoInvariantes;
 
     public Tiempo(int[] transicionesTemporizadas, double[] alfas, double[] betas) {
         this.transicionesTemporizadas = transicionesTemporizadas;
@@ -18,6 +19,8 @@ public class Tiempo {
             q[i] = 0;
             tiempoDeSensibilizado[i] = 0;
         }
+
+        tiempoInvariantes = new double[3];
     }
 
     /**
@@ -70,6 +73,19 @@ public class Tiempo {
     public void resetTiempo(int index) {
         tiempoDeSensibilizado[index] = 0;
         q[index] = 0;
+    }
+
+    public double[] getTiempoMinInvariantes() {
+        tiempoInvariantes[0] = (alfas[4] + alfas[5] + alfas[6] + alfas[7])/1000;
+        tiempoInvariantes[1] = (alfas[1] + alfas[9] + alfas[10])/1000;
+        tiempoInvariantes[2] = (alfas[2] + alfas[3])/1000;
+
+        System.out.println("-----------------TIEMPO DE INVARIANTES-----------------");
+        System.out.println("Minimo para T1-T3-T4-T5-T6 es: " + tiempoInvariantes[0] + " segundos.");
+        System.out.println("Minimo para T7-T8-T9-T10 es: " + tiempoInvariantes[1] + " segundos.");
+        System.out.println("Minimo para T1-T2-T11 es: " + tiempoInvariantes[2] + " segundos.");
+
+        return tiempoInvariantes;
     }
 
     public int[] getTransicionesTemporizadas() {

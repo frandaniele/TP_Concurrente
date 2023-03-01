@@ -1,57 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><pnml>
     <net id="Net-One" type="P/T net">
         <token id="Default" enabled="true" red="0" green="0" blue="0"/>
-        <labels x="464" y="132" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="479" y="404" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="466" y="301" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="252" y="201" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="342" y="72" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="48" y="176" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="708" y="402" width="68" height="26" border="true">
-            <text>Recursos</text>
-        </labels>
-        <labels x="114" y="95" width="55" height="23" border="true">
-            <text>Tarea1</text>
-        </labels>
-        <labels x="182" y="235" width="55" height="23" border="true">
-            <text>Tarea2</text>
-        </labels>
-        <labels x="374" y="171" width="55" height="23" border="true">
-            <text>Tarea3</text>
-        </labels>
-        <labels x="258" y="286" width="55" height="23" border="true">
-            <text>Tarea4</text>
-        </labels>
-        <labels x="272" y="384" width="55" height="23" border="true">
-            <text>Tarea5</text>
-        </labels>
-        <labels x="565" y="383" width="55" height="23" border="true">
-            <text>Tarea6</text>
-        </labels>
-        <labels x="673" y="269" width="55" height="23" border="true">
-            <text>Tarea7</text>
-        </labels>
-        <labels x="675" y="159" width="55" height="23" border="true">
-            <text>Tarea8</text>
-        </labels>
-        <labels x="61" y="309" width="81" height="32" border="true">
-            <text>Trabajadores</text>
-        </labels>
-        <labels x="815" y="271" width="81" height="32" border="true">
-            <text>Trabajadores</text>
-        </labels>
         <place id="P1">
             <graphics>
                 <position x="15.0" y="255.0"/>
@@ -63,7 +12,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,3</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -83,7 +32,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,1</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -103,7 +52,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,0</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -123,7 +72,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,3</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -163,7 +112,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,2</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -183,7 +132,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,0</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -203,7 +152,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,1</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -223,7 +172,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,1</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -243,7 +192,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,0</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -263,7 +212,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,1</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -323,7 +272,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,0</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -343,7 +292,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,2</value>
+                <value>Default,0</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -363,7 +312,7 @@
                 </graphics>
             </name>
             <initialMarking>
-                <value>Default,0</value>
+                <value>Default,1</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -688,7 +637,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="28" y="252" curvePoint="false"/>
-            <arcpath id="001" x="42" y="52" curvePoint="false"/>
+            <arcpath id="001" x="43" y="53" curvePoint="false"/>
             <arcpath id="002" x="177" y="41" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -845,7 +794,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="763" y="281" curvePoint="false"/>
-            <arcpath id="001" x="775" y="427" curvePoint="false"/>
+            <arcpath id="001" x="776" y="428" curvePoint="false"/>
             <arcpath id="002" x="641" y="417" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -1015,7 +964,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="642" y="101" curvePoint="false"/>
-            <arcpath id="001" x="775" y="112" curvePoint="false"/>
+            <arcpath id="001" x="776" y="113" curvePoint="false"/>
             <arcpath id="002" x="763" y="252" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -1029,7 +978,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="162" y="272" curvePoint="false"/>
-            <arcpath id="001" x="162" y="277" curvePoint="false"/>
+            <arcpath id="001" x="163" y="278" curvePoint="false"/>
             <arcpath id="002" x="41" y="268" curvePoint="false"/>
             <type value="normal"/>
         </arc>
@@ -1173,7 +1122,7 @@
                 <value>false</value>
             </tagged>
             <arcpath id="000" x="327" y="416" curvePoint="false"/>
-            <arcpath id="001" x="42" y="427" curvePoint="false"/>
+            <arcpath id="001" x="43" y="428" curvePoint="false"/>
             <arcpath id="002" x="28" y="281" curvePoint="false"/>
             <type value="normal"/>
         </arc>

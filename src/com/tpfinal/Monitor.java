@@ -200,14 +200,26 @@ public class Monitor {
     /**
      * imprime la cant de c/ invariante de transicion completado
      */
-    public void getCuantosDeCada(){
+    public void getResultados(){
         double total = tInvariantes[0] + tInvariantes[1] + tInvariantes[2];
         double porcentaje0 = tInvariantes[0] / total;
         double porcentaje1 = tInvariantes[1] / total;
         double porcentaje2 = tInvariantes[2] / total;
 
-        System.out.println("Invariante que termina en T6: " + tInvariantes[0] + " (" + String.format("%.2f", porcentaje0 * 100) + "%)");
-        System.out.println("Invariante que termina en T10: " + tInvariantes[1] + " (" + String.format("%.2f", porcentaje1 * 100) + "%)");
-        System.out.println("Invariante que termina en T11: " + tInvariantes[2] + " (" + String.format("%.2f", porcentaje2 * 100) + "%)");
+        System.out.println("\n-----------------INVARIANTES-----------------------");
+        System.out.println("T1-T3-T4-T5-T6 se disparo: " + tInvariantes[0]+ " veces " + " (" + String.format("%.2f", porcentaje0 * 100) + "%)");
+        System.out.println("T7-T8-T9-T10 se disparo: " + tInvariantes[1]+ " veces " + " (" + String.format("%.2f", porcentaje1 * 100) + "%)");
+        System.out.println("T1-T2-T11 se disparo: " + tInvariantes[2]+ " veces " + " (" + String.format("%.2f", porcentaje2 * 100) + "%)");
+
+        getTiempoTotalInvariantes();
+    }
+
+    private void getTiempoTotalInvariantes() {
+        double[] tiempoInvariantes = tiempo.getTiempoMinInvariantes();
+
+
+        System.out.println("Minimo total de disparar " + tInvariantes[0] + " T1-T3-T4-T5-T6 es: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]) + " segundos.");
+        System.out.println("Minimo total de disparar " + tInvariantes[1] + " T7-T8-T9-T10 es: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]) + " segundos.");
+        System.out.println("Minimo total de disparar " + tInvariantes[2] + " T1-T2-T11 es: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]) + " segundos.");
     }
 }

@@ -3,6 +3,8 @@ package com.tpfinal;
 public class Main {
 
     public static void main(String[] args) {
+        double start_time = System.currentTimeMillis();
+
         final int[] pInvariantes = {3, 1, 3, 2, 1, 1, 1, 1, 2};
 
         final int[][] matrizIncidencia = {
@@ -106,16 +108,18 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("\n-----------------INVARIANTES-----------------------");
-        
-        monitor.getCuantosDeCada();//imprimo cuantos invariantes se dispararon
-
-        log.writeFile();//escribo el archivo log.txt
-
         for (Thread thread : threads) {
             thread.interrupt();//si quedaron hilos durmiendo los interrumpo
         }
-        
+      
+        monitor.getResultados();//imprimo cuantos invariantes se dispararon
+
+        log.writeFile();//escribo el archivo log.txt
+
         System.out.println("-------------------MAIN END------------------------");
+
+        double end_time = System.currentTimeMillis() - start_time;
+
+        System.out.println("El programa se ejecuto en:  " + String.format("%.2f", end_time/1000) + " segundos.");
     }
 }
