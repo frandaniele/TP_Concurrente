@@ -3,7 +3,18 @@ package com.tpfinal;
 public class Main {
 
     public static void main(String[] args) {
-        final int[] pInvariantes = {3, 1, 3, 2, 1, 1, 1, 1, 2};
+        final int[] pInvariantesVal = {3, 1, 3, 2, 1, 1, 1, 1, 2};
+        final int[][] pInvariantesPlazas = {
+            {1, 2, 5, 6, 9, 13}, 
+            {9, 10, 11}, 
+            {8, 11, 12, 15}, 
+            {13, 14, 15}, 
+            {15, 16}, 
+            {6, 17}, 
+            {2, 3}, 
+            {4, 5}, 
+            {6, 7, 8},
+        };
 
         final int[][] matrizIncidencia = {
               // T1 T10 T11  T2  T3  T4  T5  T6  T7  T8  T9
@@ -58,7 +69,7 @@ public class Main {
         Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
 
         Log log = Log.getInstance();
-        RedDePetri rdp = new RedDePetri(m0, pInvariantes, tSensibilizadas0, matrizIncidencia, transicionAInvariante, log, tiempo);
+        RedDePetri rdp = new RedDePetri(m0, pInvariantesVal, pInvariantesPlazas, tSensibilizadas0, matrizIncidencia, transicionAInvariante, log, tiempo);
         Politica politica = new Politica();
         Monitor monitor = new Monitor(rdp, politica, tiempo);
 

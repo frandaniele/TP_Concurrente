@@ -1,9 +1,12 @@
 package com.tpfinal;
 
+import java.util.Arrays;
+
 public class RedDePetri {
     private int[] marcado;
 
-    private final int[] pInvariantes;
+    private final int[] pInvariantesVal;
+    private final int[][] pInvariantesPlazas;
 
     private final int[][] matrizIncidencia;
     
@@ -15,9 +18,10 @@ public class RedDePetri {
 
     private Tiempo tiempo;
 
-    public RedDePetri(int[] m0, int[] invariantesPlaza, int[] tSensibilizadas, int[][] matriz, int[] mapaTransicionesInvariantes, Log log, Tiempo tiempo) {
+    public RedDePetri(int[] m0, int[] pInvariantesVal, int[][] pInvariantesPlazas, int[] tSensibilizadas, int[][] matriz, int[] mapaTransicionesInvariantes, Log log, Tiempo tiempo) {
         this.marcado = m0;
-        this.pInvariantes = invariantesPlaza;
+        this.pInvariantesVal = pInvariantesVal;
+        this.pInvariantesPlazas = pInvariantesPlazas;
         this.tSensibilizadas = tSensibilizadas;
         this.matrizIncidencia = matriz;
         this.mapaTransicionesInvariantes = mapaTransicionesInvariantes;
@@ -199,28 +203,22 @@ public class RedDePetri {
      * @return true si no se violo ningun invariante, false si si
      */
     public boolean checkPInvariantes(){
-        if(getMarcadoPlaza(1) + getMarcadoPlaza(2) + getMarcadoPlaza(5) + getMarcadoPlaza(6) + getMarcadoPlaza(9) + getMarcadoPlaza(13) != pInvariantes[0])
-            System.out.println("Inv 1: " + pInvariantes[0] + " Dio: " + (getMarcadoPlaza(1) + getMarcadoPlaza(2) + getMarcadoPlaza(5) + getMarcadoPlaza(6) + getMarcadoPlaza(9)));
-        else if(getMarcadoPlaza(10) + getMarcadoPlaza(11) + getMarcadoPlaza(9) != pInvariantes[1])
-            System.out.println("Inv 2: " + pInvariantes[1] + " Dio: " + (getMarcadoPlaza(10) + getMarcadoPlaza(11) + getMarcadoPlaza(9)));
-        else if(getMarcadoPlaza(11) + getMarcadoPlaza(12) + getMarcadoPlaza(15) + getMarcadoPlaza(8) != pInvariantes[2])
-            System.out.println("Inv 3: " + pInvariantes[2] + " Dio: " + (getMarcadoPlaza(11) + getMarcadoPlaza(12) + getMarcadoPlaza(15) + getMarcadoPlaza(8)));
-        else if(getMarcadoPlaza(13) + getMarcadoPlaza(14) + getMarcadoPlaza(15) != pInvariantes[3])
-            System.out.println("Inv 4: " + pInvariantes[3] + " Dio: " + (getMarcadoPlaza(13) + getMarcadoPlaza(14) + getMarcadoPlaza(15)));
-        else if(getMarcadoPlaza(15) + getMarcadoPlaza(16) != pInvariantes[4])
-            System.out.println("Inv 5: " + pInvariantes[4] + " Dio: " + (getMarcadoPlaza(15) + getMarcadoPlaza(16)));
-        else if(getMarcadoPlaza(17) + getMarcadoPlaza(6) != pInvariantes[5])
-            System.out.println("Inv 6: " + pInvariantes[5] + " Dio: " + (getMarcadoPlaza(17) + getMarcadoPlaza(6)));
-        else if(getMarcadoPlaza(2) + getMarcadoPlaza(3) != pInvariantes[6])
-            System.out.println("Inv 7: " + pInvariantes[6] + " Dio: " + (getMarcadoPlaza(2) + getMarcadoPlaza(3)));
-        else if(getMarcadoPlaza(4) + getMarcadoPlaza(5) != pInvariantes[7])
-            System.out.println("Inv 8: " + pInvariantes[7] + " Dio: " + (getMarcadoPlaza(4) + getMarcadoPlaza(5)));
-        else if(getMarcadoPlaza(6) + getMarcadoPlaza(7) + getMarcadoPlaza(8) != pInvariantes[8])
-            System.out.println("Inv 9: " + pInvariantes[8] + " Dio: " + (getMarcadoPlaza(6) + getMarcadoPlaza(7) + getMarcadoPlaza(8)));
-        else
-            return true;
+        for (int i = 0; i < pInvariantesPlazas.length; i++) {
+            if(getSumaInvariante(pInvariantesPlazas[i]) != pInvariantesVal[i]) {
+                System.out.println("Inv " + Arrays.toString(pInvariantesPlazas[i]) + ": Debia dar " + pInvariantesVal[i] + " y dio " + getSumaInvariante(pInvariantesPlazas[i]));                
+                return false;
+            }
+        }
+        
+        return true;
+    }
 
-        return false;
+    private int getSumaInvariante(int[] plazas) {
+        int suma = 0;
+        for(int plaza : plazas)
+            suma += getMarcadoPlaza(plaza);
+
+        return suma;
     }
 
     public int getCantidadTransiciones(){

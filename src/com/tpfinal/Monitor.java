@@ -39,7 +39,7 @@ public class Monitor {
             
             //System.out.println(Thread.currentThread().getName() + " va a intentar disparar");
 
-            if(rdp.disparar(t)) {
+            if(rdp.disparar(t)) {//si disparo hago signal, caso contrario no
                 if (!signal()) // si desperte, el hilo despertado se encarga de liberar el mutex
                     mutexMonitor.release();
             }
@@ -49,7 +49,7 @@ public class Monitor {
                     dormir(t);
                     disparar(t);//cuando me despierto vuelvo a entrar al metodo del monitor
                 }
-                else {
+                else {//debo esperar sensibilizado
                     mutexMonitor.release();
                     colaCondicion(t);
                     rdp.disparar(t);//cuando me despiertan significa que puedo disparar instantaneamente
@@ -96,7 +96,7 @@ public class Monitor {
                   //  System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
                     colas[i].acquire();
                 } catch (InterruptedException e) {
-                    System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " esperando condicion.");
+                    System.out.println("\nEl fin de la jornada laboral encontró a\n" + Thread.currentThread().getName() + " esperando condicion.");
                     synchronized(this) {
                         interrumpidos++;
                     }
@@ -125,7 +125,7 @@ public class Monitor {
                         }
                     }
                 } catch (InterruptedException e) {
-                    System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
+                    System.out.println("\nEl fin de la jornada laboral encontró a\n" + Thread.currentThread().getName() + " durmiendo.");
                     synchronized(this) {
                         interrumpidos++;
                     }
@@ -217,9 +217,9 @@ public class Monitor {
 
         System.out.println("\n-----------------INVARIANTES-----------------------");
         System.out.println("Completados: " + (int)total + ". Interrumpidos: " + interrumpidos);
-        System.out.println("T1-T3-T4-T5-T6 se disparo: " + tInvariantes[0]+ " veces " + " (" + String.format("%.2f", porcentaje0 * 100) + "%)");
-        System.out.println("T7-T8-T9-T10 se disparo: " + tInvariantes[1]+ " veces " + " (" + String.format("%.2f", porcentaje1 * 100) + "%)");
-        System.out.println("T1-T2-T11 se disparo: " + tInvariantes[2]+ " veces " + " (" + String.format("%.2f", porcentaje2 * 100) + "%)");
+        System.out.println("T1-T3-T4-T5-T6 se disparo: " + tInvariantes[0]+ " veces " + " (" + formatDoubleString(porcentaje0 * 100) + "%)");
+        System.out.println("T7-T8-T9-T10 se disparo: " + tInvariantes[1]+ " veces " + " (" + formatDoubleString(porcentaje1 * 100) + "%)");
+        System.out.println("T1-T2-T11 se disparo: " + tInvariantes[2]+ " veces " + " (" + formatDoubleString(porcentaje2 * 100) + "%)");
 
         getTiempoTotalInvariantes();
     }
@@ -233,8 +233,12 @@ public class Monitor {
         String inv3 = "T1-T2-T11\t(0 - " + alfas[3] + " - " + alfas[2] + ")";
 
         System.out.println("-----------------------TIEMPO----------------------");
-        System.out.println(inv1 + "\n\tUna vuelta: " + tiempoInvariantes[0] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]/1000) + "[s]");
-        System.out.println(inv2 + "\n\tUna vuelta: " + tiempoInvariantes[1] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]/1000) + "[s]");
-        System.out.println(inv3 + "\n\tUna vuelta: " + tiempoInvariantes[2] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]/1000) + "[s]");
+        System.out.println(inv1 + "\n\tUna vuelta: " + tiempoInvariantes[0] + "[ms]\n\tTotal: " + formatDoubleString(tInvariantes[0]*tiempoInvariantes[0]/1000) + "[s]");
+        System.out.println(inv2 + "\n\tUna vuelta: " + tiempoInvariantes[1] + "[ms]\n\tTotal: " + formatDoubleString(tInvariantes[1]*tiempoInvariantes[1]/1000) + "[s]");
+        System.out.println(inv3 + "\n\tUna vuelta: " + tiempoInvariantes[2] + "[ms]\n\tTotal: " + formatDoubleString(tInvariantes[2]*tiempoInvariantes[2]/1000) + "[s]");
+    }
+
+    private String formatDoubleString(double val) {
+        return String.format("%.2f", val);
     }
 }
