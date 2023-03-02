@@ -1,9 +1,26 @@
 package com.tpfinal;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Politica {
     public Politica(){
     }
     
+    public int decisionRandom(int[] candidatos){
+        int aDespertar = -1;
+        ArrayList<Integer> select = new ArrayList<Integer>();
+        for(int i = 0; i < candidatos.length; i++){
+            if(candidatos[i] == 1)
+                select.add(i);
+        }
+        if(select.size() > 0){
+            Random rand = new Random();
+            aDespertar = select.get(rand.nextInt(select.size()));
+        }
+        return aDespertar;
+    }
+
     public int decision(int[] candidatos){
         if(candidatos[0] == 1)//prioridad al conflicto
             return 0;
