@@ -76,11 +76,15 @@ public class Tiempo {
     }
 
     public double[] getTiempoMinInvariantes() {
-        tiempoInvariantes[0] = (alfas[4] + alfas[5] + alfas[6] + alfas[7])/1000;
-        tiempoInvariantes[1] = (alfas[1] + alfas[9] + alfas[10])/1000;
-        tiempoInvariantes[2] = (alfas[2] + alfas[3])/1000;
+        tiempoInvariantes[0] = (alfas[4] + alfas[5] + alfas[6] + alfas[7]);
+        tiempoInvariantes[1] = (alfas[1] + alfas[9] + alfas[10]);
+        tiempoInvariantes[2] = (alfas[2] + alfas[3]);
         
         return tiempoInvariantes;
+    }
+
+    public double[] getAlfas() {
+        return alfas;
     }
 
     public int[] getTransicionesTemporizadas() {

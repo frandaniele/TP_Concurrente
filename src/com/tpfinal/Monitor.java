@@ -1,6 +1,7 @@
 package com.tpfinal;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class Monitor {
     private Semaphore mutexMonitor;
@@ -10,6 +11,7 @@ public class Monitor {
     private Tiempo tiempo;
     private int nTransicionesRed;
     private int[] tInvariantes = {0, 0, 0};
+    private int interrumpidos = 0;
 
     public Monitor(RedDePetri rdp, Politica politica, Tiempo tiempo) {
         this.rdp = rdp;
@@ -35,24 +37,24 @@ public class Monitor {
         try {
             mutexMonitor.acquire();
             
-            System.out.println(Thread.currentThread().getName() + " va a intentar disparar");
+            //System.out.println(Thread.currentThread().getName() + " va a intentar disparar");
 
-            boolean dispare = rdp.disparar(t);
-
-            boolean desperte = signal();
-
-            if (!desperte) // si desperte, el hilo despertado se encarga de liberar el mutex
-                mutexMonitor.release();
-
-            if (!dispare) {
+            if(rdp.disparar(t)) {
+                if (!signal()) // si desperte, el hilo despertado se encarga de liberar el mutex
+                    mutexMonitor.release();
+            }
+            else {
                 if (rdp.estaSensibilizada(t)) {//debo esperar hasta cumplir el tiempo alfa
+                    mutexMonitor.release();
                     dormir(t);
                     disparar(t);//cuando me despierto vuelvo a entrar al metodo del monitor
                 }
                 else {
+                    mutexMonitor.release();
                     colaCondicion(t);
                     rdp.disparar(t);//cuando me despiertan significa que puedo disparar instantaneamente
-                    mutexMonitor.release();//libero el mutex
+                    if (!signal()) // si desperte, el hilo despertado se encarga de liberar el mutex
+                        mutexMonitor.release();
                 }
             }
         } catch (Exception e) {
@@ -69,15 +71,15 @@ public class Monitor {
         //int aDespertar = politica.decision(obtenerVectorM());
         int aDespertar = politica.decisionCompleja(obtenerVectorM(), tInvariantes, rdp.getmapaTransicionesInvariantes());
                 
-        System.out.println(Thread.currentThread().getName() + " vino aDespertar");
+        //System.out.println(Thread.currentThread().getName() + " vino aDespertar");
                 
         if (aDespertar != -1) {
-            System.out.println(Thread.currentThread().getName() + " desperto condicion " + aDespertar);
+            //System.out.println(Thread.currentThread().getName() + " desperto condicion " + aDespertar);
             colas[aDespertar].release();
             return true;
         }
-        else
-            System.out.println(Thread.currentThread().getName() + " no desperto a nadie");
+        //else
+        //    System.out.println(Thread.currentThread().getName() + " no desperto a nadie");
 
         return false;
     }
@@ -90,10 +92,13 @@ public class Monitor {
         for (int i = 0; i < t.length; i++) {
             if (t[i] == 1) {
                 try {
-                    System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
+                  //  System.out.println(Thread.currentThread().getName() + " vino a esperar por condicion " + i);
                     colas[i].acquire();
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " esperando condicion.");
+                    synchronized(this) {
+                        interrumpidos++;
+                    }
                     Thread.currentThread().interrupt();
                 }
                 return;//salgo del for
@@ -114,12 +119,15 @@ public class Monitor {
                     if(tiempo.getTiempoDeSensibilizado()[i] != 0) {//ya fue sensibilizada, estoy esperando entrar en ventana
                         double aDormir = tiempo.calcularTiempoRestante(i);                        
                         if(aDormir > 0){
-                            System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal");
-                            Thread.sleep((long)aDormir);
+                     //       System.out.println(Thread.currentThread().getName() + " vino a esperar para entrar en su ventana temporal. ");
+                            TimeUnit.NANOSECONDS.sleep((long)(aDormir*1000));
                         }
                     }
                 } catch (InterruptedException e) {
                     System.out.println("\nEl fin de la jornada laboral encontró a " + Thread.currentThread().getName() + " durmiendo.");
+                    synchronized(this) {
+                        interrumpidos++;
+                    }
                     Thread.currentThread().interrupt();
                 }
                 return;//salgo del for
@@ -207,6 +215,7 @@ public class Monitor {
         double porcentaje2 = tInvariantes[2] / total;
 
         System.out.println("\n-----------------INVARIANTES-----------------------");
+        System.out.println("Completados: " + (int)total + ". Interrumpidos: " + interrumpidos);
         System.out.println("T1-T3-T4-T5-T6 se disparo: " + tInvariantes[0]+ " veces " + " (" + String.format("%.2f", porcentaje0 * 100) + "%)");
         System.out.println("T7-T8-T9-T10 se disparo: " + tInvariantes[1]+ " veces " + " (" + String.format("%.2f", porcentaje1 * 100) + "%)");
         System.out.println("T1-T2-T11 se disparo: " + tInvariantes[2]+ " veces " + " (" + String.format("%.2f", porcentaje2 * 100) + "%)");
@@ -216,10 +225,15 @@ public class Monitor {
 
     private void getTiempoTotalInvariantes() {
         double[] tiempoInvariantes = tiempo.getTiempoMinInvariantes();
+        double[] alfas = tiempo.getAlfas();
+
+        String inv1 = "T1-T3-T4-T5-T6\t(0 - " + alfas[4] + " - " + alfas[5] + " - " + alfas[6] + " - " + alfas[7] + ")";
+        String inv2 = "T7-T8-T9-T10\t(0 - " + alfas[9] + " - " + alfas[10] + " - " + alfas[1] + ")";
+        String inv3 = "T1-T2-T11\t(0 - " + alfas[3] + " - " + alfas[2] + ")";
 
         System.out.println("-----------------------TIEMPO----------------------");
-        System.out.println("T1-T3-T4-T5-T6\n\tUna vuelta: " + tiempoInvariantes[0] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]) + "[s]");
-        System.out.println("T7-T8-T9-T10\n\tUna vuelta: " + tiempoInvariantes[1] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]) + "[s]");
-        System.out.println("T1-T2-T11\n\tUna vuelta: " + tiempoInvariantes[2] + "[s]\n\tTotal: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]) + "[s]");
+        System.out.println(inv1 + "\n\tUna vuelta: " + tiempoInvariantes[0] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[0]*tiempoInvariantes[0]/1000) + "[s]");
+        System.out.println(inv2 + "\n\tUna vuelta: " + tiempoInvariantes[1] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[1]*tiempoInvariantes[1]/1000) + "[s]");
+        System.out.println(inv3 + "\n\tUna vuelta: " + tiempoInvariantes[2] + "[ms]\n\tTotal: " + String.format("%.2f", tInvariantes[2]*tiempoInvariantes[2]/1000) + "[s]");
     }
 }

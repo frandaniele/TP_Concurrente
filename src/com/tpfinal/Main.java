@@ -52,9 +52,8 @@ public class Main {
         final int[] transicionAInvariante = {-1,1,2,2,0,0,0,0,1,1,1};
 
         /*-------- Instanciamos los objetos necesarios del sistema --------*/
-        //int[] temporizadas = {0,0,0,0,0,0,0,0,0,0,0};
         int[] temporizadas = {0,1,1,1,1,1,1,1,0,1,1};
-        double[] alfas = {0,2.5,3.5,2,1,1,1,1,0,1,1};
+        double[] alfas = {0,1,1,3,1,1,1,1,0,1,2};
         double[] betas = {0,10000,10000,10000,10000,10000,10000,10000,0,10000,10000};
         Tiempo tiempo = new Tiempo(temporizadas, alfas, betas);
 

@@ -1,7 +1,5 @@
 package com.tpfinal;
 
-import java.util.concurrent.TimeUnit;
-
 public class Trabajador {
     protected int[][] transiciones;
     protected Monitor monitor;
@@ -13,12 +11,7 @@ public class Trabajador {
      */
     public void disparos() {
         for(int[] t : transiciones) {
-            try {
-                monitor.disparar(t);
-                TimeUnit.MILLISECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            monitor.disparar(t);
         }
     }
 }

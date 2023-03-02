@@ -43,7 +43,7 @@ public class RedDePetri {
             if(transicion == -1) 
                 throw new IllegalStateException("Valor inesperado");
 
-            System.out.println(Thread.currentThread().getName() + " disparo T" + transicion);
+         //   System.out.println(Thread.currentThread().getName() + " disparo T" + transicion);
             log.escribirLog("T" + transicion + "-");
                 
             return true;
