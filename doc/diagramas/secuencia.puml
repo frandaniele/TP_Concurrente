@@ -41,46 +41,49 @@ RedDePetri --> RedDePetri: dispare == puedeDisparar
 
 RedDePetri --> Monitor: dispare
 
-Monitor -> RedDePetri: getTransicionesSensibilizadas()
-RedDePetri --> Monitor: sensibilizadas
+alt dispare == true
+    Monitor -> RedDePetri: getTransicionesSensibilizadas()
+    RedDePetri --> Monitor: sensibilizadas
 
-Monitor -> colas: quienesEstan()
-colas --> Monitor: quienesEstan
+    Monitor -> colas: quienesEstan()
+    colas --> Monitor: quienesEstan
 
-Monitor -> Monitor: m = sensibilizadas & \nquienesEstan
+    Monitor -> Monitor: m = sensibilizadas & \nquienesEstan
 
-Monitor -> Politica: decision(m)
-Politica --> Monitor: aDespertar
-
-alt aDespertar > 0
-    Monitor -> colas: release()
-    colas --> Monitor: desperte == true
-    Monitor --> trabajador2: se despierta el hilo
-else aDespertar == -1
-    colas --> Monitor: desperte == false
-end
-
-alt desperte == false
-Monitor -> mutexMonitor: release()
-mutexMonitor --> Monitor
-end
-
-alt dispare != true
+    Monitor -> Politica: decision(m)
+    Politica --> Monitor: aDespertar
+    alt aDespertar > 0
+        Monitor -> colas: release()
+        colas --> Monitor
+        Monitor --> trabajador2: se despierta el hilo
+    else aDespertar == -1
+        Monitor -> mutexMonitor: release()
+        mutexMonitor --> Monitor
+        Monitor --> trabajador1: me voy del monitor
+    end
+else dispare == false
     Monitor -> RedDePetri: estaSensibilizada(transicion)
     RedDePetri --> Monitor: estaSensibilizada
     alt estaSensibilizada == true
+        Monitor -> mutexMonitor: release()
+        mutexMonitor --> Monitor
         Monitor -> Tiempo: calcularTiempoRestante(transicion)
         Tiempo --> Monitor: aDormir
         Monitor -> trabajador1: sleep(aDormir)
         trabajador1 --> Monitor
         Monitor -> Monitor: disparar(transicion)
     else estaSensibilizada == false
+        Monitor -> mutexMonitor: release()
+        mutexMonitor --> Monitor
         Monitor -> colas: acquire()
         colas --> Monitor
         Monitor -> RedDePetri: disparar(transicion)
         RedDePetri --> Monitor: true
-        Monitor -> mutexMonitor: release()
-        mutexMonitor --> Monitor
+        Monitor -> Monitor: signal()
+        alt signal() == false
+            Monitor -> mutexMonitor: release()
+            mutexMonitor --> Monitor
+        end
     end
 end
 

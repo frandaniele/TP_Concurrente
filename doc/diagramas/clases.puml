@@ -19,23 +19,27 @@ class Operario {
 }
 
 class Politica {
+    + int decisionRandom ( int[] )
     + int decision ( int[] )
     + int decisionCompleja ( int[], int[], int[] )
 }
 
 class Tiempo {
     - int[] transicionesTemporizadas
-    - long[] tiempoDeSensibilizado
-    - long[] alfas
-    - long[] betas
-    - long[] q
+    - double[] tiempoDeSensibilizado
+    - double[] alfas
+    - double[] betas
+    - double[] q
+    - double[] tiempoInvariantes
     + actualizarQ ( int )
     + sensibilizarTiempo ( int )
     + resetTiempo ( int )
-    + enVentana ( int )
+    + boolean enVentana ( int )
     + int[] getTransicionesTemporizadas (  )
-    + int calcularTiempoRestante ( int )
-    + long[] getTiempoDeSensibilizado(  )
+    + double calcularTiempoRestante ( int )
+    + double[] getTiempoMinInvariantes (  )
+    + double[] getTiempoDeSensibilizado (  )
+    + double[] getAlfas (  )
 }
 
 class Log {
@@ -48,14 +52,17 @@ class Log {
 
 class RedDePetri {
     - int[] marcado
-    - int[] pInvariantes
+    - int[] pInvariantesVal
+    - int[][] pInvariantesPlazas
     - int[][] matrizIncidencia
     - int[] tSensibilizadas
+    - int[] mapaTransicionesInvariantes
     - Log log
     - Tiempo tiempo
     + boolean disparar ( int[] )
     + int[] getTransicionesSensibilizadas (  )
     + int getCantidadTransiciones (  )
+    + int[] getMapaTransicionesInvariantes (  )
     + boolean estaSensibilizada ( int[] )
     + boolean checkPInvariantes (  )
     - boolean evaluarDisparo ( int[] )
@@ -63,6 +70,7 @@ class RedDePetri {
     - calcularSensibilizadas (  )
     - int getMarcadoPlaza ( int )
     - int traducirTransicion ( int[] )
+    - int getSumaInvariante ( int[] )
 }
 
 class Monitor {
@@ -73,15 +81,18 @@ class Monitor {
     - Tiempo tiempo
     - int nTransicionesRed
     - int[] tInvariantes
+    - int interrumpidos
     + disparar ( int[] )
     + boolean seguirDisparando (  )
     + addInvariante ( int[] )
-    + getCuantosDeCada (  )
+    + getResultados (  )
     - int[] obtenerVectorM (  )
     - boolean signal (  )
     - colaCondicion ( int[] )
     - dormir ( int[] )
     - int traducirTransicion ( int[] )
+    - getTiempoTotalInvariantes (  )
+    - String formatDoubleString ( double )
 }
 
 class Main {
@@ -90,21 +101,11 @@ class Main {
     - int[][] matrizIncidencia
     - int[] m0
     - int[] tSensibilizadas
-    - int[] t1
-    - int[] t2
-    - int[] t3
-    - int[] t4
-    - int[] t5
-    - int[] t6
-    - int[] t7
-    - int[] t8
-    - int[] t9
-    - int[] t10
-    - int[] t11
+    - int[][] transiciones
     - int[] transicionAInvariante
     - int[] temporizadas
-    - long[] alfas
-    - long[] betas
+    - double[] alfas
+    - double[] betas
     - Tiempo tiempo
     - Log log
     - RedDePetri rdp
