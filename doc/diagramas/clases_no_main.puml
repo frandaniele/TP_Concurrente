@@ -118,22 +118,6 @@ class Monitor {
     - String formatDoubleString ( double )
 }
 
-class Main {
-    + main ( String[] )
-    - RdPInit rdpValues
-    - Tiempo tiempo
-    - Log log
-    - RedDePetri rdp
-    - Politica politica
-    - Monitor monitor
-    - int[][] transiciones
-    - Operario[] grupo1
-    - Operario[] grupo2
-    - Capataz capataz
-    - Pasante pasante
-    - Thread[] threads
-}
-
 class Semaphore {
     + acquire (  )
     + release (  )
@@ -151,9 +135,9 @@ class FileWriter
 
 class PrintWriter
 
-Monitor --> Semaphore
-RedDePetri <- Monitor
+Monitor -> Semaphore
 Monitor -> Politica
+RedDePetri <- Monitor
 
 Runnable <|-. Capataz
 Runnable <|-. Operario
@@ -168,24 +152,13 @@ Capataz --> Monitor
 Pasante --> Monitor
 Operario --> Monitor
 
-Main -> RdPInit
-Main --> Tiempo
-Main --> Log
-Main ---> Capataz
-Main ---> Operario
-Main ---> Pasante
-Main ---> Thread
-Main ----> RedDePetri
-Main ----> Politica
-Main -----> Monitor
-
-Tiempo <-- Monitor
-Tiempo <-- RedDePetri
+RedDePetri --> Tiempo
+Monitor --> Tiempo
 Tiempo -> RdPInit
 
 Log --> Log
-FileWriter <- Log
 Log -> PrintWriter
+FileWriter <-- Log
 Log <-- RedDePetri
 
 RedDePetri -> RdPInit

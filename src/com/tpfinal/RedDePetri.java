@@ -18,13 +18,13 @@ public class RedDePetri {
 
     private Tiempo tiempo;
 
-    public RedDePetri(int[] m0, int[] pInvariantesVal, int[][] pInvariantesPlazas, int[] tSensibilizadas, int[][] matriz, int[] mapaTransicionesInvariantes, Log log, Tiempo tiempo) {
-        this.marcado = m0;
-        this.pInvariantesVal = pInvariantesVal;
-        this.pInvariantesPlazas = pInvariantesPlazas;
-        this.tSensibilizadas = tSensibilizadas;
-        this.matrizIncidencia = matriz;
-        this.mapaTransicionesInvariantes = mapaTransicionesInvariantes;
+    public RedDePetri(RdPInit rdpValues, Log log, Tiempo tiempo) {
+        this.marcado = rdpValues.getM0();
+        this.pInvariantesVal = rdpValues.getpInvariantesVal();
+        this.pInvariantesPlazas = rdpValues.getpInvariantesPlazas();
+        this.tSensibilizadas = rdpValues.gettSensibilizadas0();
+        this.matrizIncidencia = rdpValues.getMatrizIncidencia();
+        this.mapaTransicionesInvariantes = rdpValues.getTransicionAInvariante();
         this.log = log;
         this.tiempo = tiempo;
     }

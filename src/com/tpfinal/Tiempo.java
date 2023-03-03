@@ -8,10 +8,10 @@ public class Tiempo {
     private double[] q;
     private double[] tiempoInvariantes;
 
-    public Tiempo(int[] transicionesTemporizadas, double[] alfas, double[] betas) {
-        this.transicionesTemporizadas = transicionesTemporizadas;
-        this.alfas = alfas;
-        this.betas = betas;
+    public Tiempo(RdPInit rdpValues) {
+        this.transicionesTemporizadas = rdpValues.getTemporizadas();
+        this.alfas = rdpValues.getAlfas();
+        this.betas = rdpValues.getBetas();
         
         q = new double[transicionesTemporizadas.length];
         tiempoDeSensibilizado = new double[transicionesTemporizadas.length];
